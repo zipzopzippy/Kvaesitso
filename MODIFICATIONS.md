@@ -6,6 +6,12 @@ the [GNU General Public License v3](LICENSE.txt), which also covers this version
 
 ## Changes from Kvaesitso
 
+- **Keyboard filter bar moves with the keyboard.** Upstream only enables it once the drawer has fully
+  settled and animates its space on a separate spring, so the search UI jumps when the keyboard
+  opens or closes. Here it follows the keyboard's position every frame (`LauncherScaffold.kt`).
+- **Search bar menu keeps the keyboard open.** Upstream's menu popup takes input focus, so Android
+  drops the keyboard without animating and the search UI jumps. Here the popup isn't focusable
+  (`SearchBarMenu.kt`).
 - Personal strings live in `app/ui/src/main/res/values/strings_personal.xml`, not upstream's
   `strings.xml`, so translations and upstream string changes merge cleanly.
 - **GitHub Actions release workflow** (`.github/workflows/personal-release.yml`): every push to
