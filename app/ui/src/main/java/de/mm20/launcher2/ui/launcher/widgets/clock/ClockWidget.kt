@@ -55,6 +55,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import de.mm20.launcher2.preferences.BatteryStatusVisibility
 import de.mm20.launcher2.preferences.ClockWidgetAlignment
+import de.mm20.launcher2.preferences.ClockWidgetWeatherPill
 import de.mm20.launcher2.preferences.ClockWidgetColors
 import de.mm20.launcher2.preferences.ClockWidgetStyle
 import de.mm20.launcher2.preferences.ui.ClockWidgetSettings
@@ -114,6 +115,7 @@ fun ClockWidget(
 
     // Personal build: text shadow + weather line (see MODIFICATIONS.md)
     val textShadow by viewModel.textShadow.collectAsState()
+    val weatherPill by viewModel.weatherPill.collectAsState()
     val baseTypography = MaterialTheme.typography
     val clockTypography = remember(baseTypography, textShadow, darkColors) {
         if (textShadow) baseTypography.withClockTextShadow(darkColors) else baseTypography
@@ -200,11 +202,12 @@ fun ClockWidget(
                                 }
 
                                 if (partProvider != null) {
+                                    ClockPill(weatherPill, useThemeColor, Modifier.padding(bottom = 8.dp)) { // Personal build
                                     DynamicZone(
-                                        modifier = Modifier.padding(bottom = 8.dp),
                                         compact = false,
                                         provider = partProvider,
                                     )
+                                    }
                                 }
                             }
                         }
@@ -385,6 +388,7 @@ fun ConfigureClockWidgetSheet(
         val monospaced by viewModel.monospaced.collectAsState()
         val useAccentColor by viewModel.useThemeColor.collectAsState()
         val textShadow by viewModel.textShadow.collectAsState()
+        val weatherPill by viewModel.weatherPill.collectAsState()
         val parts by viewModel.parts.collectAsState()
         val smartspacer by viewModel.useSmartspacer.collectAsState()
 
@@ -514,6 +518,17 @@ fun ConfigureClockWidgetSheet(
                         icon = R.drawable.text_fields_24px,
                         value = textShadow,
                         onValueChanged = { viewModel.setTextShadow(it) }
+                    )
+                    ListPreference(
+                        title = stringResource(R.string.preference_clock_widget_weather_pill),
+                        icon = R.drawable.light_mode_24px,
+                        items = listOf(
+                            stringResource(R.string.preference_clock_widget_weather_pill_none) to ClockWidgetWeatherPill.None,
+                            stringResource(R.string.preference_clock_widget_weather_pill_light) to ClockWidgetWeatherPill.Light,
+                            stringResource(R.string.preference_clock_widget_weather_pill_dark) to ClockWidgetWeatherPill.Dark,
+                        ),
+                        value = weatherPill,
+                        onValueChanged = { if (it != null) viewModel.setWeatherPill(it) }
                     )
                     AnimatedVisibility(compact == false && style !is ClockWidgetStyle.Custom) {
                         SwitchPreference(
