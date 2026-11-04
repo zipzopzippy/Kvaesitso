@@ -728,7 +728,6 @@
     <string name="poi_category_furniture">Loja de móveis</string>
     <string name="poi_category_synagogue">Sinagoga</string>
     <string name="music_widget_previous_track">Faixa anterior</string>
-    <string name="preference_launch_breezyweather_app">Abrir Breezy Weather</string>
     <string name="poi_category_car_sharing">Compartilhamento de carros</string>
     <string name="poi_category_japanese_restaurant">Restaurante japonês</string>
     <string name="poi_category_ramen_restaurant">Restaurante de ramen</string>
@@ -801,7 +800,6 @@
     <string name="preference_tasks_integration_description">Tasks é um aplicativo gratuito e open source de lista de tarefas e lembretes. Se instalado, %1$s poderá exibir e procurar suas tarefas do aplicativo Tasks.</string>
     <string name="no_feed_providers">Nenhum provedor de feed instalado</string>
     <string name="preference_contacts_call_on_tap">Toque para chamar</string>
-    <string name="preference_breezyweather_integration_description">Breezy Weather é um aplicativo de clima gratuito e open source. Se instalado, %1$s poderá usar Breezy Weather como uma fonte de dados para dados de clima.</string>
     <string name="poi_category_optician">Oftalmologista</string>
     <string name="poi_category_hindu_temple">Templo hindu</string>
     <string name="poi_category_atm">Caixa eletrônico</string>
@@ -834,7 +832,6 @@
     <string name="weather_forecast_precipitation">Chuva</string>
     <string name="poi_category_charging_station">Estação de recarga</string>
     <string name="preference_colors_high_contrast">Alto contraste</string>
-    <string name="preference_breezyweather_integration_instructions">Para usar o Breezy Weather como provedor de clima:\n\n1. Vá para Breezy Weather &gt; Configurações &gt; Widgets e papel de parede animado &gt; Enviar dados meteorológicos para Gadgetbridge &gt; Ativar %1$s\n\n2. No %1$s, selecione Breezy Weather como provedor de clima</string>
     <string name="no_selection">Nenhuma seleção</string>
     <string name="save_as_file">Salvar como arquivo</string>
     <string name="provider_breezy">Breezy Weather</string>
@@ -868,7 +865,6 @@
     <string name="confirmation_delete_transparencies_scheme">Tem certeza que deseja excluir o esquema de transparência %1$s?</string>
     <string name="new_theme_name">(sem título)</string>
     <string name="theme_bundle_name">Nome</string>
-    <string name="preference_breezyweather_integration">Breezy Weather</string>
     <string name="preference_tasks_integration">Tasks</string>
     <plurals name="contact_phone_numbers">
         <item quantity="one">%1$s número de telefone</item>

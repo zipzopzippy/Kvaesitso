@@ -790,7 +790,6 @@
     <string name="import_theme_exists">ธีมนี้ถูกติดตั้งไว้แล้วและจะถูกอัปเดต</string>
     <string name="import_theme_contents">รายการการปรับแต่ง</string>
     <string name="preference_tasks_integration_description">Tasks คือแอปเสรีและโอเพนซอร์สสำหรับการจดบันทึกและแจ้งเตือนรายการสิ่งที่ต้องทำ คุณสามารถติดตั้งแอป Tasks เพื่อให้ %1$s แสดงและค้นหางานของคุณได้</string>
-    <string name="preference_breezyweather_integration_instructions">ขั้นตอนการตั้งแอป Breezy Weather เป็นแหล่งข้อมูลสภาพอากาศ\n\n1. เปิดแอป Breezy Weather &gt; การตั้งค่า &gt; วิดเจ็ตและภาพพื้นหลังแบบเคลื่อนไหว &gt; ส่งข้อมูล Gadgetbridge &gt; เปิดใช้งาน %1$s \n\n2. เปิดการตั้งค่า %1$s และเลือก Breezy Weather เป็นผู้ให้บริการข้อมูลสภาพอากาศ</string>
     <string name="theme_import_title">นำเข้าธีม</string>
     <string name="preference_screen_shapes">รูปร่าง</string>
     <string name="preference_shapes_default">ค่าเริ่มต้น</string>
@@ -804,8 +803,6 @@
     <string name="missing_permission_tasks_integration">คุณต้องอนุญาตให้เข้าถึง Tasks เพื่อใช้งานตัวเชื่อมต่อ Tasks</string>
     <string name="provider_breezy">Breezy Weather</string>
     <string name="preference_location_breezy">จัดการตำแหน่งที่อยู่ใน Breezy Weather</string>
-    <string name="preference_launch_breezyweather_app">เปิด Breezy Weather</string>
-    <string name="preference_breezyweather_integration_description">Breezy Weather คือแอปเสรีและโอเพนซอร์สสำหรับการติดตามสภาพอากาศ คุณสามารถติดตั้งแอป Breeze Weather เพื่อให้ %1$s ใช้ข้อมูลสภาพอากาศจาก Breezy Weather ได้</string>
     <string name="no_selection">ยังไม่ได้เลือกสิ่งใด</string>
     <string name="save_as_file">บันทึกเป็นไฟล์</string>
     <string name="theme_export_title">ส่งออกธีม</string>
@@ -820,7 +817,6 @@
     <string name="missing_permission_tasks_search_settings">คุณต้องอนุญาตให้เข้าถึง Tasks เพื่อค้นหางาน</string>
     <string name="preference_search_tasks">งาน</string>
     <string name="preference_search_tasks_summary">ค้นหางานในแอป Tasks</string>
-    <string name="preference_breezyweather_integration">Breezy Weather</string>
     <string name="preference_widgets_on_home_screen">วิดเจ็ตบนหน้าจอหลัก</string>
     <string name="preference_widgets_on_home_screen_summary">แสดงวิดเจ็ตบนหน้าจอหลักแทนการใช้อีกหน้าหนึ่ง</string>
     <string name="preference_gesture_swipe_up">ปัดขึ้น</string>
