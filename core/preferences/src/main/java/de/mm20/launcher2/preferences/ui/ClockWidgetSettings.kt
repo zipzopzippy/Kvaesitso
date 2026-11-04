@@ -170,6 +170,13 @@ class ClockWidgetSettings internal constructor(
         launcherDataStore.update { it.copy(clockWidgetTextShadow = enabled) }
     }
 
+    val weatherPill
+        get() = launcherDataStore.data.map { it.clockWidgetWeatherPill }
+
+    fun setWeatherPill(pill: de.mm20.launcher2.preferences.ClockWidgetWeatherPill) {
+        launcherDataStore.update { it.copy(clockWidgetWeatherPill = pill) }
+    }
+
     val useSmartspacer
         get() = launcherDataStore.data.map { it.clockWidgetSmartspacer }
 

@@ -51,6 +51,7 @@ data class LauncherSettingsData internal constructor(
     val clockWidgetMonospaced: Boolean = false,
     val clockWidgetUseThemeColor: Boolean = false,
     val clockWidgetTextShadow: Boolean = true,
+    val clockWidgetWeatherPill: ClockWidgetWeatherPill = ClockWidgetWeatherPill.None,
     val clockWidgetAlarmPart: Boolean = true,
     @Deprecated("")
     @SerialName("clockWidgetBatteryPart")

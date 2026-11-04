@@ -79,6 +79,9 @@ class ClockWidgetVM : ViewModel(), KoinComponent {
     val useThemeColor = settings.useThemeColor
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(), false)
 
+    val weatherPill = settings.weatherPill
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(), de.mm20.launcher2.preferences.ClockWidgetWeatherPill.None)
+
     val dockAboveSearchBar = settings.dockAboveSearchBar
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(), false)
 
