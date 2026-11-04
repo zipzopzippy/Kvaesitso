@@ -76,6 +76,13 @@ class ClockWidgetSettings internal constructor(
     val dock
         get() = launcherDataStore.data.map { it.homeScreenDock }
 
+    /**
+     * True if the dock is enabled and should be pinned just above the search bar
+     * (instead of in the middle of the screen, below the clock).
+     */
+    val dockAboveSearchBar
+        get() = launcherDataStore.data.map { it.homeScreenDock && it.homeScreenDockAboveSearchBar }
+
     val alignment
         get() = launcherDataStore.data.map { it.clockWidgetAlignment }
 

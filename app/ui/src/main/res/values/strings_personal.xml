@@ -5,4 +5,7 @@
     <string name="preference_themed_icons_home_only_summary" translatable="false">Use themed icons on the home screen only, not in the app drawer</string>
     <string name="preference_discreet_profile_switcher" translatable="false">Discreet profile switcher</string>
     <string name="preference_discreet_profile_switcher_summary" translatable="false">Show the personal, work and private space switcher as small icons on the right, without labels</string>
+    <string name="preference_dock_position" translatable="false">Dock position</string>
+    <string name="preference_dock_position_bottom" translatable="false">Above search bar</string>
+    <string name="preference_dock_position_center" translatable="false">Middle of the screen</string>
 </resources>

@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
@@ -84,6 +85,10 @@ fun ClockWidget(
     modifier: Modifier = Modifier,
     fillScreenHeight: Boolean,
     editMode: Boolean = false,
+    /**
+     * Whether to render the dock as part of the clock widget. False if the parent renders it separately.
+     */
+    showDock: Boolean = true,
 ) {
     val viewModel: ClockWidgetVM = viewModel()
     val context = LocalContext.current
@@ -234,13 +239,19 @@ fun ClockWidget(
                     }
                 }
                 val dockProvider by viewModel.dockProvider.collectAsState()
-                if (dockProvider != null) {
+                val dockAboveSearchBar by viewModel.dockAboveSearchBar.collectAsState()
+                if (dockProvider != null && showDock) {
                     Box(
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(bottom = 16.dp)
                     ) {
                         dockProvider?.Component(false)
+                    }
+                    if (fillScreenHeight && !dockAboveSearchBar) {
+                        // Equal weight above (clock) and below the dock keeps the dock in the
+                        // vertical middle of the screen.
+                        Spacer(modifier = Modifier.weight(1f))
                     }
                 }
             }
