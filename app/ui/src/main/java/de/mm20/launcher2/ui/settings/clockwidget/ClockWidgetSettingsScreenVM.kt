@@ -72,6 +72,11 @@ class ClockWidgetSettingsScreenVM : ViewModel(), KoinComponent {
         settings.setUseThemeColor(boolean)
     }
 
+    val textShadow = settings.textShadow
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(), true)
+
+    fun setTextShadow(enabled: Boolean) = settings.setTextShadow(enabled)
+
     val widgetsOnHome = uiSettings.homeScreenWidgets
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(), null)
 

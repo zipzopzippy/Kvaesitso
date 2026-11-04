@@ -112,6 +112,13 @@ fun ClockWidget(
             MaterialTheme.colorScheme.primary.atTone(99)
         }
 
+    // Personal build: text shadow + weather line (see MODIFICATIONS.md)
+    val textShadow by viewModel.textShadow.collectAsState()
+    val baseTypography = MaterialTheme.typography
+    val clockTypography = remember(baseTypography, textShadow, darkColors) {
+        if (textShadow) baseTypography.withClockTextShadow(darkColors) else baseTypography
+    }
+
     LaunchedEffect(time) {
         viewModel.updateTime(time)
     }
@@ -189,7 +196,7 @@ fun ClockWidget(
                                         viewModel.launchClockApp(context)
                                     }
                                 ) {
-                                    Clock(clockStyle, false, darkColors)
+                                    MaterialTheme(typography = clockTypography) { Clock(clockStyle, false, darkColors) }
                                 }
 
                                 if (partProvider != null) {
@@ -236,7 +243,7 @@ fun ClockWidget(
                                         viewModel.launchClockApp(context)
                                     }
                                 ) {
-                                    Clock(clockStyle, true, darkColors)
+                                    MaterialTheme(typography = clockTypography) { Clock(clockStyle, true, darkColors) }
                                 }
                             }
                         }
@@ -377,6 +384,7 @@ fun ConfigureClockWidgetSheet(
         val showSeconds by viewModel.showSeconds.collectAsState()
         val monospaced by viewModel.monospaced.collectAsState()
         val useAccentColor by viewModel.useThemeColor.collectAsState()
+        val textShadow by viewModel.textShadow.collectAsState()
         val parts by viewModel.parts.collectAsState()
         val smartspacer by viewModel.useSmartspacer.collectAsState()
 
@@ -498,6 +506,14 @@ fun ConfigureClockWidgetSheet(
                         onValueChanged = {
                             viewModel.setUseThemeColor(it)
                         }
+                    )
+                    // Personal build (see MODIFICATIONS.md)
+                    SwitchPreference(
+                        title = stringResource(R.string.preference_clock_widget_text_shadow),
+                        summary = stringResource(R.string.preference_clock_widget_text_shadow_summary),
+                        icon = R.drawable.text_fields_24px,
+                        value = textShadow,
+                        onValueChanged = { viewModel.setTextShadow(it) }
                     )
                     AnimatedVisibility(compact == false && style !is ClockWidgetStyle.Custom) {
                         SwitchPreference(
