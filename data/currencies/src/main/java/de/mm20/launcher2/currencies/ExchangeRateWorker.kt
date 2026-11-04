@@ -41,6 +41,7 @@ class ExchangeRateWorker(val context: Context, params: WorkerParameters) :
                     timestamp = SimpleDateFormat("yyyy-MM-dd").parse(date).time
                 }
             }
+            values += fetchSupplementaryExchangeRates(httpClient, values.map { it.first }.toSet())
             val currencies = values.map {
                 Currency(
                     symbol = it.first,
