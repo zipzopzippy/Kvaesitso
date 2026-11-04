@@ -46,6 +46,10 @@ the [GNU General Public License v3](LICENSE.txt), which also covers this version
   copy of the typography (`ClockTextShadow.kt`), so every clock style gets the shadow without
   touching each clock. Dark clock colours get a light glow instead. Text below the clock is not
   shadowed.
+- **Background pill** (clock widget settings: no pill, light pill, dark pill): puts the weather line
+  and the part below the clock (date, alarm, music, battery) on a pill for contrast, in the clock's
+  palette (theme colour tones with "Use theme colors", else black / white) (`ClockPill.kt`). The
+  themed dark pill uses the clock's own colour (tone 30), translucent.
 - **Compact clock parts**: in the vertical layout, the date, music, alarm and battery parts use two
   shared styles (`ClockPartText.kt`): a slightly heavier main style and a lighter accent style,
   with less padding. Music shows a small music icon (a play icon for apps that aren't music players) and "Title · Artist" on one line, scrolling
