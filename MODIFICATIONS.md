@@ -46,6 +46,10 @@ the [GNU General Public License v3](LICENSE.txt), which also covers this version
   copy of the typography (`ClockTextShadow.kt`), so every clock style gets the shadow without
   touching each clock. Dark clock colours get a light glow instead. Text below the clock is not
   shadowed.
+- **Weather below the clock** (clock widget settings, on by default): Pixel "At a Glance" style
+  line from the active weather provider, vertical clock layout only (see "Weather line from the
+  provider's summary" below, `WeatherGlance.kt`). Tapping it opens the weather app (the device's weather app, else
+  Breezy Weather).
 - **Background pill** (clock widget settings: no pill, light pill, dark pill): puts the weather line
   and the part below the clock (date, alarm, music, battery) on a pill for contrast, in the clock's
   palette (theme colour tones with "Use theme colors", else black / white) (`ClockPill.kt`). The
@@ -72,6 +76,13 @@ the [GNU General Public License v3](LICENSE.txt), which also covers this version
   Breezy announces new data through its update notifier (enable the launcher for it in Breezy's
   settings), with an hourly check as a fallback. Upstream's Breezy integration screen and its setup
   instructions are removed.
+- **Weather line from the provider's summary** (`WeatherGlance.kt`, `WeatherSummary.kt`): current
+  weather, then "Today" and "Tonight". At night: current weather, then "Tonight" and "Tomorrow" (or
+  "Today" before sunrise). Each with the provider's own icon and temperature, not upstream's daily average
+  icon. Only Breezy Weather offers a summary, the line is hidden with other providers.
+- **Rain on the weather line**: a raindrop with the total for the next 12 hours, or a snowflake if any
+  of it is snow, rounded to the nearest mm and hidden below 1 mm (`WeatherGlance.kt`). Can be turned
+  off below the weather switch, which sits with the dynamic zone settings.
 - **Next event under the date**: in the vertical layout, the date part also shows today's next
   timed event ("Name · 3:00 pm"), or an all-day event ("Name") when no timed event is left. Uses
   the calendars enabled for search, without tasks (`TodayEvent` in `DatePartProvider.kt`).

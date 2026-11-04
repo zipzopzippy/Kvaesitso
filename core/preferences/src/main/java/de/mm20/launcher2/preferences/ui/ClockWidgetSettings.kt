@@ -170,6 +170,20 @@ class ClockWidgetSettings internal constructor(
         launcherDataStore.update { it.copy(clockWidgetTextShadow = enabled) }
     }
 
+    val weather
+        get() = launcherDataStore.data.map { it.clockWidgetWeather }
+
+    fun setWeather(enabled: Boolean) {
+        launcherDataStore.update { it.copy(clockWidgetWeather = enabled) }
+    }
+
+    val weatherPrecipitation
+        get() = launcherDataStore.data.map { it.clockWidgetWeatherPrecipitation }
+
+    fun setWeatherPrecipitation(enabled: Boolean) {
+        launcherDataStore.update { it.copy(clockWidgetWeatherPrecipitation = enabled) }
+    }
+
     val weatherPill
         get() = launcherDataStore.data.map { it.clockWidgetWeatherPill }
 
