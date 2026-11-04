@@ -14,6 +14,11 @@ the [GNU General Public License v3](LICENSE.txt), which also covers this version
   (`SearchBarMenu.kt`).
 - **Filters for disabled search types are hidden** in the filter panel, the keyboard filter bar and
   the default filter settings (`AvailableSearchFilters.kt`).
+- **Themed icons on the home screen only** (Settings > Icons > "Home screen only"): the dock and
+  home screen widgets use themed icons, the app drawer, search and settings don't. `IconService`
+  keeps a second, unthemed provider set; grid/list items on the home page (`LocalScaffoldPage`)
+  request the themed set. Long-press popups of dock icons and the separate widgets page count as
+  "not home" and show unthemed icons.
 - **Discreet profile switcher** (Settings > Search > Apps): the Personal / Work / Private space
   tabs become small right-aligned icon buttons without labels, and the "Lock" button becomes a
   lock icon in the same row (`ui/launcher/search/apps/AppResults.kt`).

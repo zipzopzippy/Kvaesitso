@@ -63,9 +63,11 @@ class SearchableItemVM : ListItemViewModel(), KoinComponent {
 
     val searchable = MutableStateFlow<SavableSearchable?>(null)
     private val iconSize = MutableStateFlow(0)
-    fun init(searchable: SavableSearchable, iconSize: Int) {
+    private val homeScreen = MutableStateFlow(false)
+    fun init(searchable: SavableSearchable, iconSize: Int, homeScreen: Boolean = false) {
         this.searchable.value = searchable
         this.iconSize.value = iconSize
+        this.homeScreen.value = homeScreen
     }
 
     val isPinned = searchable.flatMapLatest {
@@ -84,9 +86,10 @@ class SearchableItemVM : ListItemViewModel(), KoinComponent {
         if (it == null) emptyFlow() else badgeService.getBadge(it)
     }.stateIn(viewModelScope, SharingStarted.Lazily, null)
 
-    val icon = searchable.combine(iconSize) { sh, sz -> sh to sz }.flatMapLatest { (s, size) ->
-        if (s == null || size == 0) emptyFlow() else iconService.getIcon(s, size)
-    }.stateIn(viewModelScope, SharingStarted.Lazily, null)
+    val icon = combine(searchable, iconSize, homeScreen) { sh, sz, home -> Triple(sh, sz, home) }
+        .flatMapLatest { (s, size, home) ->
+            if (s == null || size == 0) emptyFlow() else iconService.getIcon(s, size, home)
+        }.stateIn(viewModelScope, SharingStarted.Lazily, null)
 
     val tags = searchable.flatMapLatest {
         if (it == null) emptyFlow() else tagsService.getTags(it)
@@ -154,7 +157,7 @@ class SearchableItemVM : ListItemViewModel(), KoinComponent {
     }
 
     fun getChildIcon(child: SavableSearchable, size: Int): Flow<LauncherIcon?> {
-        return iconService.getIcon(child, size)
+        return iconService.getIcon(child, size, homeScreen.value)
     }
 
     fun isChildPinned(child: SavableSearchable): Flow<Boolean> {

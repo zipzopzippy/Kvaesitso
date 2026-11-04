@@ -76,6 +76,8 @@ import de.mm20.launcher2.ui.launcher.search.wikipedia.ArticleItemGridPopup
 import de.mm20.launcher2.ui.launcher.transitions.EnterHomeTransitionParams
 import de.mm20.launcher2.ui.launcher.transitions.HandleEnterHomeTransition
 import de.mm20.launcher2.ui.locals.LocalGridSettings
+import de.mm20.launcher2.ui.launcher.scaffold.LocalScaffoldPage
+import de.mm20.launcher2.ui.launcher.scaffold.ScaffoldPage
 import de.mm20.launcher2.ui.locals.LocalWindowSize
 import de.mm20.launcher2.ui.overlays.Overlay
 import de.mm20.launcher2.ui.theme.transparency.transparency
@@ -90,11 +92,13 @@ fun GridItem(
     labelMaxLines: Int = 1,
     highlight: Boolean = false
 ) {
-    val viewModel: SearchableItemVM = listItemViewModel(key = "search-${item.key}")
+    val homeScreen = LocalScaffoldPage.current == ScaffoldPage.Home
+    val viewModel: SearchableItemVM =
+        listItemViewModel(key = if (homeScreen) "home-${item.key}" else "search-${item.key}")
     val iconSize = LocalGridSettings.current.iconSize.dp.toPixels()
 
-    LaunchedEffect(item, iconSize) {
-        viewModel.init(item, iconSize.toInt())
+    LaunchedEffect(item, iconSize, homeScreen) {
+        viewModel.init(item, iconSize.toInt(), homeScreen)
     }
 
     val context = LocalContext.current
