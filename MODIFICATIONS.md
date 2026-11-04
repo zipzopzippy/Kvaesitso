@@ -34,10 +34,17 @@ the [GNU General Public License v3](LICENSE.txt), which also covers this version
   (`device_settings_strings.xml`); `AppShortcutRepository.search` and the module's DI setup
   gained a few lines. Pages that don't exist on the device are left out, and turning off the
   shortcut search turns these off too.
+- **Clock theme colour in dark mode**: with dark clock colours, "Use theme colors" now uses the
+  theme colour at tone 30 (dark navy for a blue theme) in dark mode too (upstream used
+  `primaryContainer`, which barely differed from the default clock colour). One line in
+  each of the Analog, Binary, Digital 1/2 and Segment clocks.
 - **More currencies**: the ECB only publishes ~30 exchange rates, so the rest (e.g. TWD) are
   fetched from open.er-api.com (free, no key) when currency conversion is on. ECB rates always
   take priority. New file `data/currencies/.../SupplementaryExchangeRates.kt`, one line in
   `ExchangeRateWorker`. Note: this is one extra daily network request to a third party.
+- **Plain black / white clock** without "Use theme colors": the clock and its text are black (dark
+  clock colours) or white instead of a dark / light shade of the theme colour, so the toggle makes
+  a visible difference.
 - **Fix: clock and its parts (date, alarm, music) couldn't be tapped** with the dock pinned above
   the search bar, because the dock's full-screen layer swallowed the taps. The column and the
   dock now share one container that owns the home screen's tap handling.
