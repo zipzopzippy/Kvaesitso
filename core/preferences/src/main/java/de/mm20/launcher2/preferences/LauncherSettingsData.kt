@@ -130,6 +130,7 @@ data class LauncherSettingsData internal constructor(
     val iconsShape: IconShape = IconShape.PlatformDefault,
     val iconsAdaptify: Boolean = false,
     val iconsThemed: Boolean = false,
+    val iconsThemedHomeOnly: Boolean = false,
     val iconsForceThemed: Boolean = false,
     val iconsPack: String? = null,
     @Deprecated("Use iconsThemed instead")

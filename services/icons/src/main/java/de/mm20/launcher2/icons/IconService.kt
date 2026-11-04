@@ -72,7 +72,7 @@ class IconService(
 
     private val scope = CoroutineScope(Job() + Dispatchers.Default)
 
-    private val cache = LruCache<String, LauncherIcon>(200)
+    private val cache = LruCache<String, LauncherIcon>(400) // Personal build: was 200, home and drawer icons are cached separately
 
     private val iconProviders: MutableStateFlow<List<IconProvider>> = MutableStateFlow(listOf())
 
@@ -85,6 +85,12 @@ class IconService(
         MutableStateFlow(
             listOf()
         )
+
+    // Personal build: providers / transformations for icons outside the home screen. Unthemed if
+    // themed icons are restricted to the home screen (see MODIFICATIONS.md).
+    private val nonHomeIconProviders: MutableStateFlow<List<IconProvider>> = MutableStateFlow(listOf())
+    private val nonHomeTransformations: MutableStateFlow<List<LauncherIconTransformation>> =
+        MutableStateFlow(listOf())
 
     init {
         requestIconPackListUpdate()
@@ -99,8 +105,8 @@ class IconService(
 
         iconPacksUpdated.tryEmit(Unit)
 
-        scope.launch {
-            settings.distinctUntilChanged().collectLatest { settings ->
+        for (homeScreen in listOf(true, false)) scope.launch {
+            settings.distinctUntilChanged().map { if (homeScreen || !it.themedIconsHomeOnly) it else it.copy(themedIcons = false) }.collectLatest { settings ->
                 iconPacksUpdated.collectLatest {
                     val fallbackProvider = if (settings.themedIcons) {
                         ThemedPlaceholderIconProvider(context)
@@ -140,8 +146,8 @@ class IconService(
                         ForceThemedIconTransformation()
                     )
 
-                    iconProviders.value = providers
-                    this@IconService.transformations.value = transformations
+                    (if (homeScreen) iconProviders else nonHomeIconProviders).value = providers
+                    (if (homeScreen) this@IconService.transformations else nonHomeTransformations).value = transformations
                 }
             }
         }
@@ -152,9 +158,9 @@ class IconService(
     }
 
 
-    fun getIcon(searchable: SavableSearchable, size: Int): Flow<LauncherIcon?> {
+    fun getIcon(searchable: SavableSearchable, size: Int, homeScreen: Boolean = false): Flow<LauncherIcon?> {
         if (searchable is Application && searchable.isPrivate) {
-            return transformations.map {
+            return (if (homeScreen) transformations else nonHomeTransformations).map {
                 searchable.getPlaceholderIcon(context).transform(it)
             }
         }
@@ -162,18 +168,20 @@ class IconService(
         val customIcon = getCustomIcon(searchable)
 
         return customIcon.flatMapLatest {
-            resolveCustomIcon(searchable, size, it)
+            resolveCustomIcon(searchable, size, it, homeScreen)
         }
     }
 
-    fun resolveCustomIcon(searchable: SavableSearchable, size: Int, customIcon: CustomIcon?): Flow<LauncherIcon?> {
+    fun resolveCustomIcon(searchable: SavableSearchable, size: Int, customIcon: CustomIcon?, homeScreen: Boolean = false): Flow<LauncherIcon?> {
+        val iconProviders = if (homeScreen) iconProviders else nonHomeIconProviders
+        val transformations = if (homeScreen) transformations else nonHomeTransformations
         return combine(iconProviders, transformations) { providers, transformations ->
             var icon: LauncherIcon? = cache.get(searchable.key + customIcon.hashCode() + providers.hashCode() + transformations.hashCode())
             if (icon != null) {
                 return@combine icon
             }
 
-            val provs = if (customIcon != null) getProviders(customIcon) + providers else providers
+            val provs = if (customIcon != null) getProviders(customIcon, providers) + providers else providers
             val transforms = getTransformations(customIcon) ?: transformations
 
             icon = provs.getFirstIcon(searchable, size)
@@ -187,7 +195,7 @@ class IconService(
         }
     }
 
-    private fun getProviders(customIcon: CustomIcon?): List<IconProvider> {
+    private fun getProviders(customIcon: CustomIcon?, defaultProviders: List<IconProvider> = iconProviders.value): List<IconProvider> {
         if (customIcon is UnmodifiedSystemDefaultIcon) {
             return listOf(
                 SystemIconProvider(context, false)
@@ -218,7 +226,7 @@ class IconService(
             )
         }
         if (customIcon is DefaultPlaceholderIcon) {
-            return iconProviders.value.lastOrNull()?.let { listOf(it) } ?: emptyList()
+            return defaultProviders.lastOrNull()?.let { listOf(it) } ?: emptyList()
         }
         if (customIcon is CustomTextIcon) {
             return listOf(CustomTextIconProvider(customIcon))
