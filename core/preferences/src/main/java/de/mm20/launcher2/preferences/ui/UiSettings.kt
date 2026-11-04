@@ -358,6 +358,17 @@ class UiSettings internal constructor(
         }
     }
 
+    val dockAboveSearchBar
+        get() = launcherDataStore.data.map {
+            it.homeScreenDockAboveSearchBar
+        }.distinctUntilChanged()
+
+    fun setDockAboveSearchBar(centered: Boolean) {
+        launcherDataStore.update {
+            it.copy(homeScreenDockAboveSearchBar = centered)
+        }
+    }
+
     val homeScreenWidgets
         get() = launcherDataStore.data.map {
             it.homeScreenWidgets
