@@ -77,6 +77,11 @@ class ClockWidgetSettingsScreenVM : ViewModel(), KoinComponent {
 
     fun setTextShadow(enabled: Boolean) = settings.setTextShadow(enabled)
 
+    val weatherPill = settings.weatherPill
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(), de.mm20.launcher2.preferences.ClockWidgetWeatherPill.None)
+
+    fun setWeatherPill(pill: de.mm20.launcher2.preferences.ClockWidgetWeatherPill) = settings.setWeatherPill(pill)
+
     val widgetsOnHome = uiSettings.homeScreenWidgets
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(), null)
 
