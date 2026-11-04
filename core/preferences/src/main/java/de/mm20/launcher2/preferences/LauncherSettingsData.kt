@@ -73,6 +73,7 @@ data class LauncherSettingsData internal constructor(
 
     val searchAllApps: Boolean = true,
     val appsShowDetails: Boolean = true,
+    val appsDiscreetProfileSwitcher: Boolean = false,
 
     val fileSearchProviders: Set<String> = setOf("local"),
 
