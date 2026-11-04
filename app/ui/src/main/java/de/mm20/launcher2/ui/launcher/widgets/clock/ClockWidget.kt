@@ -101,8 +101,12 @@ fun ClockWidget(
     val darkColors =
         color == ClockWidgetColors.Auto && LocalPreferDarkContentOverWallpaper.current || color == ClockWidgetColors.Dark
 
+    // Personal build: plain black / white unless the clock uses theme colours (see MODIFICATIONS.md)
+    val useThemeColor by viewModel.useThemeColor.collectAsState()
     val contentColor =
-        if (darkColors) {
+        if (!useThemeColor) {
+            if (darkColors) Color.Black else Color.White
+        } else if (darkColors) {
             MaterialTheme.colorScheme.primary.atTone(30)
         } else {
             MaterialTheme.colorScheme.primary.atTone(99)

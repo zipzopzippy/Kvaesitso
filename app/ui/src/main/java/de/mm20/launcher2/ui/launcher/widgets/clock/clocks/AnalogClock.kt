@@ -14,6 +14,7 @@ import androidx.compose.ui.graphics.drawscope.Fill
 import androidx.compose.ui.graphics.drawscope.rotate
 import androidx.compose.ui.unit.dp
 import de.mm20.launcher2.preferences.ClockWidgetStyle
+import de.mm20.launcher2.ui.ktx.atTone
 import de.mm20.launcher2.ui.locals.LocalDarkTheme
 import java.util.Calendar
 
@@ -41,7 +42,7 @@ fun AnalogClock(
             if (LocalDarkTheme.current) MaterialTheme.colorScheme.onPrimaryContainer
             else MaterialTheme.colorScheme.primaryContainer
         } else {
-            if (LocalDarkTheme.current) MaterialTheme.colorScheme.primaryContainer
+            if (LocalDarkTheme.current) MaterialTheme.colorScheme.primary.atTone(30)
             else MaterialTheme.colorScheme.primary
         }
     }

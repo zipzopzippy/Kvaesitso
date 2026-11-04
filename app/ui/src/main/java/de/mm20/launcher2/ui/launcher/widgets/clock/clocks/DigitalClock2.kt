@@ -12,6 +12,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import de.mm20.launcher2.ui.ktx.atTone
 import de.mm20.launcher2.ui.locals.LocalDarkTheme
 import java.text.SimpleDateFormat
 import java.util.Locale
@@ -33,7 +34,7 @@ fun DigitalClock2(
             if (LocalDarkTheme.current) MaterialTheme.colorScheme.onPrimaryContainer
             else MaterialTheme.colorScheme.primaryContainer
         } else {
-            if (LocalDarkTheme.current) MaterialTheme.colorScheme.primaryContainer
+            if (LocalDarkTheme.current) MaterialTheme.colorScheme.primary.atTone(30)
             else MaterialTheme.colorScheme.primary
         }
     }

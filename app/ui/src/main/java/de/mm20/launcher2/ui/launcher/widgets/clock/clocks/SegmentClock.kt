@@ -41,6 +41,7 @@ import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.repeatOnLifecycle
+import de.mm20.launcher2.ui.ktx.atTone
 import de.mm20.launcher2.ui.locals.LocalDarkTheme
 import kotlinx.coroutines.awaitCancellation
 import kotlinx.coroutines.delay
@@ -74,7 +75,7 @@ fun SegmentClock(
             if (LocalDarkTheme.current) MaterialTheme.colorScheme.onPrimaryContainer
             else MaterialTheme.colorScheme.primaryContainer
         } else {
-            if (LocalDarkTheme.current) MaterialTheme.colorScheme.primaryContainer
+            if (LocalDarkTheme.current) MaterialTheme.colorScheme.primary.atTone(30)
             else MaterialTheme.colorScheme.primary
         }
     } else {

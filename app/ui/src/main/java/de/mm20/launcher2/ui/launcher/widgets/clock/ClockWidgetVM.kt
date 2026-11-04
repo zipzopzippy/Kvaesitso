@@ -73,6 +73,9 @@ class ClockWidgetVM : ViewModel(), KoinComponent {
         .map { if (it) FavoritesPartProvider() else null }
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(), null)
 
+    val useThemeColor = settings.useThemeColor
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(), false)
+
     val dockAboveSearchBar = settings.dockAboveSearchBar
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(), false)
 
