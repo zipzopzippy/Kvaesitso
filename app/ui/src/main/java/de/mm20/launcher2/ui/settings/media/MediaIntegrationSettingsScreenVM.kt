@@ -51,22 +51,17 @@ class MediaIntegrationSettingsScreenVM : ViewModel(), KoinComponent {
     fun onResume(density: Float) {
         loading.value = true
         viewModelScope.launch(Dispatchers.Default) {
-            val musicApps = musicService.getInstalledPlayerPackages()
             val allApps = appRepository.findMany().first { it.isNotEmpty() }.filter { it.user == Process.myUserHandle() }
                 .distinctBy { it.componentName.packageName }
-            val settings = mediaSettings.first()
-            val allowList = settings.allowList
-            val denyList = settings.denyList
+            // Personal build: only the apps selected here count (see MODIFICATIONS.md)
+            val allowList = mediaSettings.first().allowList
 
             appList.value = allApps.map {
                 AppListItem(
                     label = it.label,
                     app = it,
                     packageName = it.componentName.packageName,
-                    isMusicApp = musicApps.contains(it.componentName.packageName),
-                    isChecked = allowList.contains(it.componentName.packageName) || (!denyList.contains(it.componentName.packageName) && musicApps.contains(
-                        it.componentName.packageName
-                    ))
+                    isChecked = allowList.contains(it.componentName.packageName),
                 )
             }.sorted()
             loading.value = false
@@ -82,18 +77,8 @@ class MediaIntegrationSettingsScreenVM : ViewModel(), KoinComponent {
     }
 
     private fun saveState() {
-        val allowList = mutableListOf<String>()
-        val denyList = mutableListOf<String>()
-        val appList = appList.value
-
-        for (app in appList) {
-            if (app.isChecked && !app.isMusicApp) {
-                allowList.add(app.packageName)
-            } else if (!app.isChecked && app.isMusicApp) {
-                denyList.add(app.packageName)
-            }
-        }
-        mediaSettings.setLists(allowList.toSet(), denyList.toSet())
+        val allowList = appList.value.filter { it.isChecked }.map { it.packageName }
+        mediaSettings.setLists(allowList.toSet(), emptySet())
     }
 
     fun getIcon(app: SavableSearchable, size: Int): Flow<LauncherIcon?> {
@@ -105,7 +90,6 @@ class MediaIntegrationSettingsScreenVM : ViewModel(), KoinComponent {
 data class AppListItem(
     val label: String,
     val packageName: String,
-    val isMusicApp: Boolean,
     val isChecked: Boolean,
     val app: SavableSearchable,
 ): Comparable<AppListItem> {

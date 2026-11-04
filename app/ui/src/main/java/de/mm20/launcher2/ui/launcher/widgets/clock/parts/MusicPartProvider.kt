@@ -55,8 +55,9 @@ class MusicPartProvider : PartProvider, KoinComponent {
 
     override fun getRanking(context: Context): Flow<Int> = channelFlow {
         musicService.playbackState.collectLatest {
-            if (it == PlaybackState.Stopped) send(0)
-            else send(80)
+            // Personal build: only show while actually playing, not while paused (see MODIFICATIONS.md)
+            if (it == PlaybackState.Playing) send(80)
+            else send(0)
         }
     }
 
@@ -198,7 +199,8 @@ class MusicPartProvider : PartProvider, KoinComponent {
                     )
                     }
                 }
-                CompositionLocalProvider(
+                // Personal build: no playback controls below the clock (see MODIFICATIONS.md)
+                if (ShowMusicControls) CompositionLocalProvider(
                     LocalLayoutDirection provides LayoutDirection.Ltr
                 ) {
                     Row {
@@ -251,3 +253,6 @@ class MusicPartProvider : PartProvider, KoinComponent {
     }
 
 }
+
+// Personal build: playback controls are hidden in the vertical clock layout.
+private const val ShowMusicControls = false
