@@ -46,9 +46,15 @@ the [GNU General Public License v3](LICENSE.txt), which also covers this version
   copy of the typography (`ClockTextShadow.kt`), so every clock style gets the shadow without
   touching each clock. Dark clock colours get a light glow instead. Text below the clock is not
   shadowed.
+- **Compact clock parts**: in the vertical layout, the date, music, alarm and battery parts use two
+  shared styles (`ClockPartText.kt`): a slightly heavier main style and a lighter accent style,
+  with less padding. Music shows a small music icon (a play icon for apps that aren't music players) and "Title · Artist" on one line, scrolling
+  (marquee) when it doesn't fit. The date and alarm replace
+  upstream's `TextButton` with a plain clickable row (upstream code left in place, unused).
 - **Plain black / white clock** without "Use theme colors": the clock and its text are black (dark
   clock colours) or white instead of a dark / light shade of the theme colour, so the toggle makes
   a visible difference.
+- **Tapping the battery part** under the clock opens the battery settings.
 - **Fix: clock and its parts (date, alarm, music) couldn't be tapped** with the dock pinned above
   the search bar, because the dock's full-screen layer swallowed the taps. The column and the
   dock now share one container that owns the home screen's tap handling.
