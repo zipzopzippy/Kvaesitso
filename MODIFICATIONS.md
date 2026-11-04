@@ -24,6 +24,10 @@ the [GNU General Public License v3](LICENSE.txt), which also covers this version
   (`device_settings_strings.xml`); `AppShortcutRepository.search` and the module's DI setup
   gained a few lines. Pages that don't exist on the device are left out, and turning off the
   shortcut search turns these off too.
+- **More currencies**: the ECB only publishes ~30 exchange rates, so the rest (e.g. TWD) are
+  fetched from open.er-api.com (free, no key) when currency conversion is on. ECB rates always
+  take priority. New file `data/currencies/.../SupplementaryExchangeRates.kt`, one line in
+  `ExchangeRateWorker`. Note: this is one extra daily network request to a third party.
 - Personal strings live in `app/ui/src/main/res/values/strings_personal.xml`, not upstream's
   `strings.xml`, so translations and upstream string changes merge cleanly.
 - **GitHub Actions release workflow** (`.github/workflows/personal-release.yml`): every push to
