@@ -10,6 +10,11 @@
     <string name="preference_dock_position_center" translatable="false">Middle of the screen</string>
     <string name="preference_clock_widget_text_shadow" translatable="false">Text shadow</string>
     <string name="preference_clock_widget_text_shadow_summary" translatable="false">Shadow behind the clock digits</string>
+    <string name="preference_clock_widget_weather" translatable="false">Weather</string>
+    <string name="preference_clock_widget_weather_summary" translatable="false">Show the current, day and night temperatures below the clock</string>
+    <string name="date_tonight" translatable="false">Tonight</string>
+    <string name="preference_clock_widget_weather_precipitation" translatable="false">Rain and snow</string>
+    <string name="preference_clock_widget_weather_precipitation_summary" translatable="false">Show the total expected over the next 12 hours</string>
     <string name="missing_permission_breezy_weather" translatable="false">Permission to read Breezy Weather data is required to show its weather</string>
     <string name="preference_clock_widget_weather_pill" translatable="false">Background pill</string>
     <string name="preference_clock_widget_weather_pill_none" translatable="false">No pill</string>

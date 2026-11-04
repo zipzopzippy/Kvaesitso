@@ -115,7 +115,9 @@ fun ClockWidget(
 
     // Personal build: text shadow + weather line (see MODIFICATIONS.md)
     val textShadow by viewModel.textShadow.collectAsState()
+    val showWeather by viewModel.weather.collectAsState()
     val weatherPill by viewModel.weatherPill.collectAsState()
+    val weatherPrecipitation by viewModel.weatherPrecipitation.collectAsState()
     val baseTypography = MaterialTheme.typography
     val clockTypography = remember(baseTypography, textShadow, darkColors) {
         if (textShadow) baseTypography.withClockTextShadow(darkColors) else baseTypography
@@ -199,6 +201,10 @@ fun ClockWidget(
                                     }
                                 ) {
                                     MaterialTheme(typography = clockTypography) { Clock(clockStyle, false, darkColors) }
+                                }
+
+                                if (showWeather) {
+                                    WeatherGlance(time = time - time % 60_000L, showPrecipitation = weatherPrecipitation, modifier = Modifier.padding(bottom = 8.dp), pill = weatherPill, themed = useThemeColor)
                                 }
 
                                 if (partProvider != null) {
@@ -388,7 +394,9 @@ fun ConfigureClockWidgetSheet(
         val monospaced by viewModel.monospaced.collectAsState()
         val useAccentColor by viewModel.useThemeColor.collectAsState()
         val textShadow by viewModel.textShadow.collectAsState()
+        val showWeather by viewModel.weather.collectAsState()
         val weatherPill by viewModel.weatherPill.collectAsState()
+        val weatherPrecipitation by viewModel.weatherPrecipitation.collectAsState()
         val parts by viewModel.parts.collectAsState()
         val smartspacer by viewModel.useSmartspacer.collectAsState()
 
@@ -672,6 +680,23 @@ fun ConfigureClockWidgetSheet(
                 Column(
                     modifier = Modifier.fillMaxWidth()
                 ) {
+                    // Personal build: not ranked with the parts below, it always shows above them
+                    SwitchPreference(
+                        title = stringResource(R.string.preference_clock_widget_weather),
+                        summary = stringResource(R.string.preference_clock_widget_weather_summary),
+                        icon = R.drawable.light_mode_24px,
+                        value = showWeather,
+                        onValueChanged = { viewModel.setWeather(it) }
+                    )
+                    AnimatedVisibility(showWeather) {
+                        SwitchPreference(
+                            title = stringResource(R.string.preference_clock_widget_weather_precipitation),
+                            summary = stringResource(R.string.preference_clock_widget_weather_precipitation_summary),
+                            icon = R.drawable.water_drop_24px_filled,
+                            value = weatherPrecipitation,
+                            onValueChanged = { viewModel.setWeatherPrecipitation(it) }
+                        )
+                    }
                     if (smartspacer == true) {
                         Banner(
                             modifier = Modifier.padding(16.dp),
