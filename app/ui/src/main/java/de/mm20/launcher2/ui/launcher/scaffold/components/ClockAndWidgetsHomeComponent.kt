@@ -31,6 +31,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
@@ -79,7 +80,7 @@ internal object ClockAndWidgetsHomeComponent : ScaffoldComponent() {
         val scope = rememberCoroutineScope()
 
         val clockWidgetSettings: ClockWidgetSettings = koinInject()
-        val fillHeight by clockWidgetSettings.fillHeight.collectAsState(null)
+        val fillHeight by remember { clockWidgetSettings.fillHeight }.collectAsState(null)
 
         if (fillHeight == null) return
 
@@ -92,17 +93,17 @@ internal object ClockAndWidgetsHomeComponent : ScaffoldComponent() {
         val topPadding by animateDpAsState(if (editMode) 80.dp else 0.dp)
         val previousScroll = remember { mutableIntStateOf(scrollState.value) }
 
-        LaunchedEffect(
-            scrollState.value,
-            scrollState.canScrollForward,
-            scrollState.canScrollBackward
-        ) {
-            val delta = scrollState.value - previousScroll.intValue
-            previousScroll.intValue = scrollState.value
-            if (!editMode) {
-                state.onComponentScroll(delta.toFloat())
+        // Personal build: observe scrolling without recomposing the home screen on every frame
+        LaunchedEffect(state) {
+            snapshotFlow { scrollState.value }.collect { value ->
+                val delta = value - previousScroll.intValue
+                previousScroll.intValue = value
+                if (!editMode) {
+                    state.onComponentScroll(delta.toFloat())
+                }
             }
         }
+        val isScrolledToTop by remember { derivedStateOf { scrollState.value == 0 } }
 
         // Personal build: one container owns the home page modifier (taps, page animation) so the
         // pinned dock can sit on top of the column without swallowing the clock's taps.
@@ -117,7 +118,7 @@ internal object ClockAndWidgetsHomeComponent : ScaffoldComponent() {
                 .padding(bottom = if (pinDock) pinnedDockHeight.toDp() else 0.dp),
         ) {
             val bottomPadding by animateDpAsState(
-                if (fillHeight == true && scrollState.value == 0) insets.calculateBottomPadding()
+                if (fillHeight == true && isScrolledToTop) insets.calculateBottomPadding()
                 else 0.dp
             )
 
