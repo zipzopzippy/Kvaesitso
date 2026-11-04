@@ -21,23 +21,28 @@ import coil.imageLoader
 import coil.request.ImageRequest
 import coil.size.Scale
 import de.mm20.launcher2.crashreporter.CrashReporter
-import de.mm20.launcher2.notifications.Notification
 import de.mm20.launcher2.notifications.NotificationRepository
 import de.mm20.launcher2.preferences.media.MediaSettings
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.awaitCancellation
+import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.flow.channelFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.firstOrNull
+import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.shareIn
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
@@ -102,33 +107,41 @@ internal class MusicServiceImpl(
             field = value
         }
 
+    @OptIn(ExperimentalCoroutinesApi::class)
     private val currentMediaController: SharedFlow<MediaController?> =
         combine(
             notificationRepository.notifications,
             settings,
         ) { notifications, settings ->
-            withContext(Dispatchers.Default) {
-                val musicApps = getEnabledPlayerPackages(
-                    settings.allowList,
-                    settings.denyList,
-                )
-                val sbn: Notification? = notifications.filter {
-                    it.mediaSessionToken != null && musicApps.contains(it.packageName)
-                }.maxByOrNull { it.postTime }
-
-                return@withContext sbn?.mediaSessionToken
-            }
+            // Personal build: only the apps selected in the settings (see MODIFICATIONS.md)
+            notifications
+                .filter { settings.allowList.contains(it.packageName) }
+                .sortedByDescending { it.postTime }
+                .mapNotNull { it.mediaSessionToken }
         }
             .distinctUntilChanged()
-            .map { token ->
-                if (token == null) return@map null
-                else {
-                    return@map MediaController(context, token).also {
-                        lastPlayerPackage = it.packageName
-                    }
+            .map { tokens -> tokens.map { MediaController(context, it) } }
+            // Personal build: prefer whatever is playing, else the newest (see MODIFICATIONS.md)
+            .flatMapLatest { controllers ->
+                if (controllers.isEmpty()) flowOf(null)
+                else combine(controllers.map { it.isPlaying() }) { playing ->
+                    controllers.getOrElse(playing.indexOf(true)) { controllers.first() }
                 }
             }
+            .distinctUntilChanged()
+            .onEach { controller -> controller?.let { lastPlayerPackage = it.packageName } }
             .shareIn(scope, SharingStarted.WhileSubscribed(), 1)
+
+    private fun MediaController.isPlaying(): Flow<Boolean> = callbackFlow {
+        val callback = object : MediaController.Callback() {
+            override fun onPlaybackStateChanged(state: android.media.session.PlaybackState?) {
+                trySend(state?.state == android.media.session.PlaybackState.STATE_PLAYING)
+            }
+        }
+        registerCallback(callback, Handler(Looper.getMainLooper()))
+        trySend(playbackState?.state == android.media.session.PlaybackState.STATE_PLAYING)
+        awaitClose { unregisterCallback(callback) }
+    }.distinctUntilChanged()
 
     override val isMusicPlayer: Flow<Boolean> = currentMediaController.map { controller ->
         controller == null || getInstalledPlayerPackages().contains(controller.packageName)
@@ -587,14 +600,6 @@ internal class MusicServiceImpl(
                 .map { it.activityInfo.applicationInfo.packageName })
         }
         return apps
-    }
-
-    private suspend fun getEnabledPlayerPackages(
-        allowList: Set<String>,
-        denyList: Set<String>
-    ): Set<String> {
-        val installed = getInstalledPlayerPackages()
-        return installed.union(allowList).subtract(denyList).toSet()
     }
 
     override fun resetPlayer() {
