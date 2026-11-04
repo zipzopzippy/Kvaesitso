@@ -54,6 +54,14 @@ the [GNU General Public License v3](LICENSE.txt), which also covers this version
 - **Plain black / white clock** without "Use theme colors": the clock and its text are black (dark
   clock colours) or white instead of a dark / light shade of the theme colour, so the toggle makes
   a visible difference.
+- **No music playback controls** below the clock in the vertical layout; tapping the title still
+  opens the player (`ShowMusicControls` in `MusicPartProvider.kt`).
+- **Music part only shows while playing**: upstream also keeps it up while paused; here a paused
+  player falls back to the next part, e.g. the date (`getRanking` in `MusicPartProvider.kt`).
+- **Media apps are selected by hand**: upstream includes every music player unless you untick it;
+  here only the apps ticked in Media control count, whatever kind of app they are (`MusicService.kt`,
+  `MediaIntegrationSettingsScreenVM.kt`). If several have a session, whichever is playing wins, else
+  the newest.
 - **Next event under the date**: in the vertical layout, the date part also shows today's next
   timed event ("Name · 3:00 pm"), or an all-day event ("Name") when no timed event is left. Uses
   the calendars enabled for search, without tasks (`TodayEvent` in `DatePartProvider.kt`).
