@@ -194,6 +194,15 @@ fun IconsSettingsScreen() {
                     }
                 )
                 SwitchPreference(
+                    title = stringResource(R.string.preference_themed_icons_home_only),
+                    summary = stringResource(R.string.preference_themed_icons_home_only_summary),
+                    value = icons?.themedIconsHomeOnly == true,
+                    enabled = icons?.themedIcons == true,
+                    onValueChanged = {
+                        viewModel.setThemedIconsHomeOnly(it)
+                    }
+                )
+                SwitchPreference(
                     title = stringResource(R.string.preference_force_themed_icons),
                     summary = stringResource(R.string.preference_force_themed_icons_summary),
                     value = icons?.forceThemed == true,

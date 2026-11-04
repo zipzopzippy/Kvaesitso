@@ -75,6 +75,10 @@ class IconsSettingsScreenVM(
         iconSettings.setThemedIcons(themedIcons)
     }
 
+    fun setThemedIconsHomeOnly(homeOnly: Boolean) {
+        iconSettings.setThemedIconsHomeOnly(homeOnly)
+    }
+
     fun setForceThemedIcons(forceThemedIcons: Boolean) {
         iconSettings.setForceThemedIcons(forceThemedIcons)
     }
