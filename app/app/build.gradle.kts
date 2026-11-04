@@ -6,6 +6,10 @@ plugins {
     alias(libs.plugins.android.application)
 }
 
+val gitShortSha: String = providers.exec {
+    commandLine("git", "rev-parse", "--short=8", "HEAD")
+}.standardOutput.asText.get().trim()
+
 android {
     androidResources {
         generateLocaleConfig = true
@@ -84,6 +88,12 @@ android {
             create("fdroid") {
                 dimension = "variant"
                 versionNameSuffix = "-fdroid"
+            }
+            // Personal build: installs as "Kvaesitso Personal" next to the official app.
+            // See MODIFICATIONS.md.
+            create("personal") {
+                dimension = "variant"
+                versionNameSuffix = "-personal-${gitShortSha}"
             }
         }
     }
@@ -167,4 +177,11 @@ dependencies {
 
     // Uncomment this if you want annoying notifications in your debug builds
     //debugImplementation(libs.leakcanary)
+}
+
+androidComponents {
+    // Fixed app ID for the personal flavor, without the build type suffix (e.g. ".release").
+    onVariants(selector().withFlavor("variant" to "personal")) { variant ->
+        variant.applicationId.set("de.mm20.launcher2.personal")
+    }
 }
