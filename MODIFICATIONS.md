@@ -12,6 +12,8 @@ the [GNU General Public License v3](LICENSE.txt), which also covers this version
 - **Search bar menu keeps the keyboard open.** Upstream's menu popup takes input focus, so Android
   drops the keyboard without animating and the search UI jumps. Here the popup isn't focusable
   (`SearchBarMenu.kt`).
+- **Filters for disabled search types are hidden** in the filter panel, the keyboard filter bar and
+  the default filter settings (`AvailableSearchFilters.kt`).
 - Personal strings live in `app/ui/src/main/res/values/strings_personal.xml`, not upstream's
   `strings.xml`, so translations and upstream string changes merge cleanly.
 - **GitHub Actions release workflow** (`.github/workflows/personal-release.yml`): every push to
