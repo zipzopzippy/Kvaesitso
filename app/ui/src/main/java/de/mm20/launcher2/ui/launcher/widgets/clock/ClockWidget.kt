@@ -573,6 +573,10 @@ fun ConfigureClockWidgetSheet(
                 ) {
                     SwitchPreference(
                         title = stringResource(R.string.preference_clock_widget_fill_height),
+                        summary = stringResource(
+                            if (widgetsOnHome == false) R.string.preference_clock_widget_fill_height_summary_no_widgets
+                            else R.string.preference_clock_widget_fill_height_summary
+                        ),
                         icon = R.drawable.fit_page_height_24px,
                         value = fillHeight == true || widgetsOnHome == false,
                         onValueChanged = {

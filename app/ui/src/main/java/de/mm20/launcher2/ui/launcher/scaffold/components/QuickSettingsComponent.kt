@@ -34,6 +34,9 @@ import org.koin.core.component.inject
 
 internal object QuickSettingsComponent : ScaffoldComponent(), KoinComponent {
 
+    // The system shade has its own haptic feedback; don't double up.
+    override val hapticFeedback: Boolean = false
+
     private val globalActionService: GlobalActionsService by inject()
 
     override val showSearchBar: Boolean = false
