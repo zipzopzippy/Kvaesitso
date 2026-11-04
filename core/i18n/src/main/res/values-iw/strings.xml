@@ -416,15 +416,11 @@
     <string name="preference_weather_integration">מזג אוויר</string>
     <string name="preference_widgets_edit_button_summary">הצגת מקש להוספה, הסרה או סידור מחדש של יישומונים</string>
     <string name="preference_widgets_on_home_screen">יישומונים במסך הבית</string>
-    <string name="preference_breezyweather_integration_instructions">כדי להשתמש ב-Breezy Weather כספק מזג אוויר:\n\n1. עברו ל-Breezy Weather &gt; הגדרות &gt; ווידג\'טים ורקע חי &gt; שליחת נתוני Gadgetbridge &gt; הפעלת %1$s\n\n2. ב-%1$s, בחרו ב-Breezy Weather כספק מזג אוויר</string>
-    <string name="preference_launch_breezyweather_app">פתיחת Breezy Weather</string>
     <string name="preference_contacts_call_on_tap">לחצו כדי להתקשר</string>
     <string name="preference_contacts_call_on_tap_summary">התחלת שיחה ללא בקשת אישור בעת לחיצה על מספר טלפון</string>
     <string name="preference_tasks_integration_description">היישום Tasks הוא יישום חופשי בקוד פתוח המשמש לרשימת מטלות ותזכורות. אם היישום מותקן, %1$s יכול להציג ולחפש את המטלות שלך מתוך היישום Tasks.</string>
     <string name="preference_tasks_integration_ready">אינטגרציית Tasks הוגדרה במלואה ומוכנה לשימוש.</string>
     <string name="preference_launch_tasks_app">פתיחת היישום Tasks</string>
-    <string name="preference_breezyweather_integration">Breezy Weather</string>
-    <string name="preference_breezyweather_integration_description">יישומון Breezy Weather הינו יישומון מזג אוויר חופשי בקוד פתוח. אם מותקן, %1$s יכול להשתמש ב-Breezy Weather כמקור נתונים לנתוני מזג אוויר.</string>
     <string name="no_account_owncloud">טרם חיברת חשבון Owncloud</string>
     <string name="battery_part_charging">טעינה</string>
     <string name="no_account_nextcloud">טרם חיברת חשבון Nextcloud</string>

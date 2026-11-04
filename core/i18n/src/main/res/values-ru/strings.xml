@@ -823,8 +823,6 @@
     <string name="missing_permission_tasks_integration">Для использования интеграции с задачами требуется разрешение на доступ к задачам</string>
     <string name="provider_breezy">Breezy Weather</string>
     <string name="preference_location_breezy">Управлять местоположением в Breezy Weather</string>
-    <string name="preference_breezyweather_integration_description">Breezy Weather — это бесплатное и открытое приложение для прогноза погоды. Если установлено, %1$s сможет использовать Breezy Weather в качестве источника данных о погоде.</string>
-    <string name="preference_launch_breezyweather_app">Открыть Breezy Weather</string>
     <string name="action_install">Установить</string>
     <string name="preference_search_tasks_summary">Поиск задач в приложении Tasks</string>
     <string name="preference_tasks_integration_ready">Tasks интеграция полностью настроена и готова к использованию.</string>
@@ -836,8 +834,6 @@
     </plurals>
     <string name="preference_search_tasks">Задачи</string>
     <string name="preference_tasks_integration">Tasks</string>
-    <string name="preference_breezyweather_integration">Breezy Weather</string>
-    <string name="preference_breezyweather_integration_instructions">Использовать Breezy Weather в качестве поставщика погоды:\n\n1. Перейти к Breezy Weather &gt; Настройки &gt; Виджеты и живые обои &gt; Отправлять данные о погоде в Gadgetbridge &gt; Включить %1$s\n\n2. В %1$s назначьте Breezy Weather провайдером погоды</string>
     <string name="preference_tasks_integration_description">Tasks — бесплатное приложение с открытым исходным кодом для напоминаний о списках дел. Если установлено, %1$s сможет отображать и искать ваши задачи из Tasks.</string>
     <string name="preference_launch_tasks_app">Открыть приложение Tasks</string>
     <string name="theme_import_title">Импортировать тему</string>
