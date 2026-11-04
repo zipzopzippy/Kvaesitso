@@ -42,6 +42,10 @@ the [GNU General Public License v3](LICENSE.txt), which also covers this version
   fetched from open.er-api.com (free, no key) when currency conversion is on. ECB rates always
   take priority. New file `data/currencies/.../SupplementaryExchangeRates.kt`, one line in
   `ExchangeRateWorker`. Note: this is one extra daily network request to a third party.
+- **Clock text shadow** (clock widget settings, on by default): the clock digits get a shadowed
+  copy of the typography (`ClockTextShadow.kt`), so every clock style gets the shadow without
+  touching each clock. Dark clock colours get a light glow instead. Text below the clock is not
+  shadowed.
 - **Plain black / white clock** without "Use theme colors": the clock and its text are black (dark
   clock colours) or white instead of a dark / light shade of the theme colour, so the toggle makes
   a visible difference.
