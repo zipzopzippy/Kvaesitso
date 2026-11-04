@@ -4,6 +4,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -13,6 +14,8 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.IconToggleButton
 import androidx.compose.material3.LeadingIconTab
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.PrimaryScrollableTabRow
@@ -36,12 +39,70 @@ import de.mm20.launcher2.ui.launcher.search.common.list.ListResults
 import de.mm20.launcher2.ui.layout.BottomReversed
 import de.mm20.launcher2.ui.locals.LocalGridSettings
 
+/**
+ * Icon-only, right aligned variant of the profile tab row.
+ */
+@Composable
+private fun DiscreetProfileSwitcher(
+    profiles: List<Profile>,
+    selectedProfileType: Profile.Type,
+    onProfileSelected: (Profile) -> Unit,
+    showLockButton: Boolean,
+    onLock: () -> Unit,
+) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 8.dp),
+        horizontalArrangement = Arrangement.End,
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        if (showLockButton) {
+            IconButton(onClick = onLock) {
+                Icon(
+                    painterResource(if (selectedProfileType == Profile.Type.Work) R.drawable.enterprise_off_20px else R.drawable.lock_20px),
+                    contentDescription = stringResource(
+                        if (selectedProfileType == Profile.Type.Work) R.string.profile_work_profile_action_lock
+                        else R.string.profile_private_profile_action_lock
+                    ),
+                    tint = MaterialTheme.colorScheme.onSurfaceVariant,
+                )
+            }
+        }
+        for (profile in profiles) {
+            val selected = profile.type == selectedProfileType
+            IconToggleButton(
+                checked = selected,
+                onCheckedChange = { onProfileSelected(profile) },
+            ) {
+                Icon(
+                    painterResource(
+                        when (profile.type) {
+                            Profile.Type.Personal -> if (selected) R.drawable.person_24px_filled else R.drawable.person_24px
+                            Profile.Type.Work -> if (selected) R.drawable.enterprise_24px_filled else R.drawable.enterprise_24px
+                            Profile.Type.Private -> if (selected) R.drawable.encrypted_24px_filled else R.drawable.encrypted_24px
+                        }
+                    ),
+                    contentDescription = when (profile.type) {
+                        Profile.Type.Personal -> stringResource(R.string.apps_profile_main)
+                        Profile.Type.Work -> stringResource(R.string.apps_profile_work)
+                        Profile.Type.Private -> stringResource(R.string.apps_profile_private)
+                    },
+                    tint = if (selected) MaterialTheme.colorScheme.primary
+                    else MaterialTheme.colorScheme.onSurfaceVariant,
+                )
+            }
+        }
+    }
+}
+
 fun LazyListScope.AppResults(
     onProfileSelected: (Profile) -> Unit = {},
     profiles: List<Profile> = emptyList(),
     selectedProfile: Profile? = null,
     profileStates: Map<Profile.Type, Profile.State> = emptyMap(),
     showProfileLockControls: Boolean = false,
+    discreetProfileSwitcher: Boolean = false,
     onProfileLockChange: ((Profile, Boolean) -> Unit)? = null,
     apps: List<Application>,
     selectedIndex: Int,
@@ -68,6 +129,18 @@ fun LazyListScope.AppResults(
             Column(
                 verticalArrangement = if (reverse) Arrangement.BottomReversed else Arrangement.Top,
             ) {
+                if (discreetProfileSwitcher) {
+                    DiscreetProfileSwitcher(
+                        profiles = profiles,
+                        selectedProfileType = selectedProfileType,
+                        onProfileSelected = onProfileSelected,
+                        showLockButton = showProfileLockControls && !isProfileLocked &&
+                                selectedProfile != null && selectedProfileType != Profile.Type.Personal,
+                        onLock = {
+                            selectedProfile?.let { onProfileLockChange?.invoke(it, true) }
+                        },
+                    )
+                } else
                 PrimaryScrollableTabRow(
                     selectedTabIndex = profileIndex,
                     containerColor = Color.Transparent,
@@ -112,7 +185,7 @@ fun LazyListScope.AppResults(
                     }
                 }
 
-                if (!showList || isProfileLocked) {
+                if (!discreetProfileSwitcher && (!showList || isProfileLocked)) {
                     HorizontalDivider()
                 }
 
@@ -177,7 +250,7 @@ fun LazyListScope.AppResults(
                                 }
                             }
                         }
-                    } else if (showProfileLockControls) {
+                    } else if (showProfileLockControls && !discreetProfileSwitcher) {
                         FilledTonalButton(
                             modifier = Modifier
                                 .padding(12.dp)

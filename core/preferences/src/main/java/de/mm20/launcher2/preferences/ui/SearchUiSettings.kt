@@ -70,6 +70,15 @@ class SearchUiSettings internal constructor(
         }
     }
 
+    val discreetProfileSwitcher
+        get() = launcherDataStore.data.map { it.appsDiscreetProfileSwitcher }.distinctUntilChanged()
+
+    fun setDiscreetProfileSwitcher(discreet: Boolean) {
+        launcherDataStore.update {
+            it.copy(appsDiscreetProfileSwitcher = discreet)
+        }
+    }
+
     val showAppDetails
         get() = launcherDataStore.data.map { it.appsShowDetails }.distinctUntilChanged()
 

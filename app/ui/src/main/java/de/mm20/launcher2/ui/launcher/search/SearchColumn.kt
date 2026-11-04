@@ -116,6 +116,7 @@ fun SearchColumn(
     val missingLocationPermission by viewModel.missingLocationPermission.collectAsState(false)
     val missingFilesPermission by viewModel.missingFilesPermission.collectAsState(false)
     val hasProfilesPermission by viewModel.hasProfilesPermission.collectAsState(false)
+    val discreetProfileSwitcher by viewModel.discreetProfileSwitcher.collectAsState(false)
 
     val pinnedTags by favoritesVM.pinnedTags.collectAsState(emptyList())
     val selectedTag by favoritesVM.selectedTag.collectAsState(null)
@@ -238,6 +239,7 @@ fun SearchColumn(
                         columns = columns,
                         reverse = reverse,
                         showProfileLockControls = hasProfilesPermission,
+                        discreetProfileSwitcher = discreetProfileSwitcher,
                         showList = showList,
                         selectedIndex = selectedAppIndex,
                         onSelect = { selectedAppIndex = it },
