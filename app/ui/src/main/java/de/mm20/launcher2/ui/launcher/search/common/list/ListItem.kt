@@ -43,6 +43,8 @@ import de.mm20.launcher2.ui.launcher.search.shortcut.AppShortcutItem
 import de.mm20.launcher2.ui.launcher.search.website.WebsiteItem
 import de.mm20.launcher2.ui.launcher.search.wikipedia.ArticleItem
 import de.mm20.launcher2.ui.locals.LocalGridSettings
+import de.mm20.launcher2.ui.launcher.scaffold.LocalScaffoldPage
+import de.mm20.launcher2.ui.launcher.scaffold.ScaffoldPage
 
 @Composable
 fun ListItem(
@@ -54,11 +56,13 @@ fun ListItem(
 ) {
     val context = LocalContext.current
 
-    val viewModel: SearchableItemVM = listItemViewModel(key = "search-${item.key}")
+    val homeScreen = LocalScaffoldPage.current == ScaffoldPage.Home
+    val viewModel: SearchableItemVM =
+        listItemViewModel(key = if (homeScreen) "home-${item.key}" else "search-${item.key}")
     val iconSize = LocalGridSettings.current.iconSize.dp.toPixels()
 
-    LaunchedEffect(item, iconSize) {
-        viewModel.init(item, iconSize.toInt())
+    LaunchedEffect(item, iconSize, homeScreen) {
+        viewModel.init(item, iconSize.toInt(), homeScreen)
     }
 
     LaunchedEffect(showDetails) {
