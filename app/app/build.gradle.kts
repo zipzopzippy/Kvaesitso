@@ -43,6 +43,16 @@ android {
     }
 
     signingConfigs {
+        // Personal build: CI signs with the PC's debug keystore, passed in as PERSONAL_KEYSTORE,
+        // so releases update existing installs (see MODIFICATIONS.md).
+        System.getenv("PERSONAL_KEYSTORE")?.let { path ->
+            create("personal") {
+                storeFile = file(path)
+                storePassword = "android"
+                keyAlias = "androiddebugkey"
+                keyPassword = "android"
+            }
+        }
         create("gh-actions") {
             storeFile = file("${System.getenv("RUNNER_TEMP")}/keystore/keystore.jks")
             storePassword = System.getenv("KEYSTORE_PASSWORD")
@@ -93,7 +103,11 @@ android {
             // See MODIFICATIONS.md.
             create("personal") {
                 dimension = "variant"
-                versionNameSuffix = "-personal-${gitShortSha}"
+                // CI releases use an incremental build number (PERSONAL_BUILD_NUMBER, e.g. "004"),
+                // local builds the commit.
+                versionNameSuffix = System.getenv("PERSONAL_BUILD_NUMBER")
+                    ?.let { "-personal.$it" } ?: "-personal-${gitShortSha}"
+                signingConfigs.findByName("personal")?.let { signingConfig = it }
             }
         }
     }
