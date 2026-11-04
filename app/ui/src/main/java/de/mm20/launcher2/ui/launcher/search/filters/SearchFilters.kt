@@ -27,6 +27,7 @@ fun SearchFilters(
     settings: Boolean = false
 ) {
     val allCategoriesEnabled = filters.allCategoriesEnabled
+    val available = availableSearchFilters()
     Column(
         modifier = modifier
             .padding(horizontal = 4.dp),
@@ -66,7 +67,7 @@ fun SearchFilters(
                 },
                 label = { Text(stringResource(R.string.search_filter_apps)) }
             )
-            FilterChip(
+            if (available.files) FilterChip(
                 modifier = Modifier.padding(end = 16.dp),
                 selected = filters.files && (!allCategoriesEnabled || settings),
                 onClick = {
@@ -85,7 +86,7 @@ fun SearchFilters(
                 },
                 label = { Text(stringResource(R.string.preference_search_files)) }
             )
-            FilterChip(
+            if (available.contacts) FilterChip(
                 modifier = Modifier.padding(end = 16.dp),
                 selected = filters.contacts && (!allCategoriesEnabled || settings),
                 onClick = {
@@ -104,7 +105,7 @@ fun SearchFilters(
                 },
                 label = { Text(stringResource(R.string.preference_search_contacts)) }
             )
-            FilterChip(
+            if (available.events) FilterChip(
                 modifier = Modifier.padding(end = 16.dp),
                 selected = filters.events && (!allCategoriesEnabled || settings),
                 onClick = {
@@ -123,7 +124,7 @@ fun SearchFilters(
                 },
                 label = { Text(stringResource(R.string.preference_search_calendar)) }
             )
-            FilterChip(
+            if (available.shortcuts) FilterChip(
                 modifier = Modifier.padding(end = 16.dp),
                 selected = filters.shortcuts && (!allCategoriesEnabled || settings),
                 onClick = {
@@ -142,7 +143,7 @@ fun SearchFilters(
                 },
                 label = { Text(stringResource(R.string.preference_search_appshortcuts)) }
             )
-            FilterChip(
+            if (available.articles) FilterChip(
                 modifier = Modifier.padding(end = 16.dp),
                 selected = filters.articles && (!allCategoriesEnabled || settings),
                 onClick = {
@@ -161,7 +162,7 @@ fun SearchFilters(
                 },
                 label = { Text(stringResource(R.string.preference_search_wikipedia)) }
             )
-            FilterChip(
+            if (available.websites) FilterChip(
                 modifier = Modifier.padding(end = 16.dp),
                 selected = filters.websites && (!allCategoriesEnabled || settings),
                 onClick = {
@@ -180,7 +181,7 @@ fun SearchFilters(
                 },
                 label = { Text(stringResource(R.string.preference_search_websites)) }
             )
-            FilterChip(
+            if (available.places) FilterChip(
                 modifier = Modifier.padding(end = 16.dp),
                 selected = filters.places && (!allCategoriesEnabled || settings),
                 onClick = {
@@ -199,7 +200,7 @@ fun SearchFilters(
                 },
                 label = { Text(stringResource(R.string.preference_search_locations)) }
             )
-            FilterChip(
+            if (available.tools) FilterChip(
                 selected = filters.tools && (!allCategoriesEnabled || settings),
                 onClick = {
                     if (settings) {

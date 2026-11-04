@@ -36,7 +36,8 @@ fun KeyboardFilterBar(
     items: List<KeyboardFilterBarItem>,
 ) {
     val context = LocalContext.current
-    val allCategoriesEnabled = filters.allCategoriesEnabled
+    val available = availableSearchFilters()
+    val items = items.filter { available.isAvailable(it) }
     Column(
         modifier = Modifier
             .fillMaxWidth()

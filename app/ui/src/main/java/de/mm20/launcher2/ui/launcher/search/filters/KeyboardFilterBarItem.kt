@@ -59,6 +59,10 @@ val KeyboardFilterBarItem.isCategory
 
 fun SearchFilters.isSelected(item: KeyboardFilterBarItem): Boolean {
     if (item.isCategory && allCategoriesEnabled) return false
+    return valueOf(item)
+}
+
+internal fun SearchFilters.valueOf(item: KeyboardFilterBarItem): Boolean {
     return when (item) {
         KeyboardFilterBarItem.Apps -> apps
         KeyboardFilterBarItem.Events -> events
