@@ -38,7 +38,7 @@ class FavoritesPartProvider : PartProvider, KoinComponent {
                 it.columnCount
             }
         }.collectAsState(0)
-        val dockRows by uiSettings.dockRows.collectAsState(1)
+        val dockRows by remember { uiSettings.dockRows }.collectAsState(1)
         val excludeCalendar by remember { widgetRepository.exists(CalendarWidget.Type) }.collectAsState(
             true
         )
