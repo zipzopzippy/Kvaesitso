@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Personal build additions (see MODIFICATIONS.md). Kept out of core/i18n so upstream merges stay clean. -->
+<resources>
+</resources>
