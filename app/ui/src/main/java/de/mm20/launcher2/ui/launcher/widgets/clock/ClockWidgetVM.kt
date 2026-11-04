@@ -76,6 +76,12 @@ class ClockWidgetVM : ViewModel(), KoinComponent {
     val textShadow = settings.textShadow
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(), true)
 
+    val weather = settings.weather
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(), false)
+
+    val weatherPrecipitation = settings.weatherPrecipitation
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(), false)
+
     val useThemeColor = settings.useThemeColor
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(), false)
 
