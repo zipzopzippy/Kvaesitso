@@ -8,4 +8,6 @@
     <string name="preference_dock_position" translatable="false">Dock position</string>
     <string name="preference_dock_position_bottom" translatable="false">Above search bar</string>
     <string name="preference_dock_position_center" translatable="false">Middle of the screen</string>
+    <string name="preference_clock_widget_text_shadow" translatable="false">Text shadow</string>
+    <string name="preference_clock_widget_text_shadow_summary" translatable="false">Shadow behind the clock digits</string>
 </resources>

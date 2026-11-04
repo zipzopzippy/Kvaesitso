@@ -162,6 +162,14 @@ class ClockWidgetSettings internal constructor(
         }
     }
 
+    // Personal build (see MODIFICATIONS.md)
+    val textShadow
+        get() = launcherDataStore.data.map { it.clockWidgetTextShadow }
+
+    fun setTextShadow(enabled: Boolean) {
+        launcherDataStore.update { it.copy(clockWidgetTextShadow = enabled) }
+    }
+
     val useSmartspacer
         get() = launcherDataStore.data.map { it.clockWidgetSmartspacer }
 
