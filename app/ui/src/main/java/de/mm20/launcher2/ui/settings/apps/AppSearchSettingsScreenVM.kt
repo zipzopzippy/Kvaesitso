@@ -20,6 +20,13 @@ class AppSearchSettingsScreenVM: ViewModel(), KoinComponent {
     val showAppDetails = searchUiSettings.showAppDetails
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(), null)
 
+    val discreetProfileSwitcher = searchUiSettings.discreetProfileSwitcher
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(), null)
+
+    fun setDiscreetProfileSwitcher(discreet: Boolean) {
+        searchUiSettings.setDiscreetProfileSwitcher(discreet)
+    }
+
     fun setAllApps(allApps: Boolean) {
         searchUiSettings.setAllApps(allApps)
     }
