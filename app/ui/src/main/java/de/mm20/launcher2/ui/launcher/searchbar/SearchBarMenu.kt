@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.DropdownMenuGroup
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.DropdownMenuPopup
+import androidx.compose.ui.window.PopupProperties
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.IconButtonDefaults
@@ -62,6 +63,9 @@ fun RowScope.SearchBarMenu(
         DropdownMenuPopup(
             expanded = showOverflowMenu,
             onDismissRequest = { showOverflowMenu = false },
+            // Personal build: a focusable popup makes Android drop the keyboard without animating,
+            // which makes the search UI jump (see MODIFICATIONS.md)
+            properties = PopupProperties(focusable = false),
         ) {
             DropdownMenuGroup(
                 shapes = MenuDefaults.groupShapes(),
