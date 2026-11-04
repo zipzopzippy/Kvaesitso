@@ -17,6 +17,13 @@ the [GNU General Public License v3](LICENSE.txt), which also covers this version
 - **Discreet profile switcher** (Settings > Search > Apps): the Personal / Work / Private space
   tabs become small right-aligned icon buttons without labels, and the "Lock" button becomes a
   lock icon in the same row (`ui/launcher/search/apps/AppResults.kt`).
+- **Device settings in search**: system settings pages (Wi-Fi, Bluetooth, Display, Battery,
+  Developer options, ...) show up in the Shortcuts search results with the Settings app's icon
+  and can be pinned. Added as a new shortcut type in
+  `data/appshortcuts/.../DeviceSettingsShortcut.kt` with its own strings file
+  (`device_settings_strings.xml`); `AppShortcutRepository.search` and the module's DI setup
+  gained a few lines. Pages that don't exist on the device are left out, and turning off the
+  shortcut search turns these off too.
 - Personal strings live in `app/ui/src/main/res/values/strings_personal.xml`, not upstream's
   `strings.xml`, so translations and upstream string changes merge cleanly.
 - **GitHub Actions release workflow** (`.github/workflows/personal-release.yml`): every push to
