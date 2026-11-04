@@ -40,6 +40,9 @@ the [GNU General Public License v3](LICENSE.txt), which also covers this version
   (`device_settings_strings.xml`); `AppShortcutRepository.search` and the module's DI setup
   gained a few lines. Pages that don't exist on the device are left out, and turning off the
   shortcut search turns these off too.
+- **Fix: crash after opening Settings > Search > App shortcuts.** Upstream's
+  `AppShortcutsSettingsRoute` was missing `@Serializable`, so saving the settings screen's state
+  crashed whenever that page had been opened.
 - **Clock theme colour in dark mode**: with dark clock colours, "Use theme colors" now uses the
   theme colour at tone 30 (dark navy for a blue theme) in dark mode too (upstream used
   `primaryContainer`, which barely differed from the default clock colour). One line in
@@ -82,6 +85,8 @@ the [GNU General Public License v3](LICENSE.txt), which also covers this version
   Breezy announces new data through its update notifier (enable the launcher for it in Breezy's
   settings), with an hourly check as a fallback. Upstream's Breezy integration screen and its setup
   instructions are removed.
+- **Fix: scheduled weather updates being skipped**: a run could count as too early because the last
+  update was saved at the end of the previous run, doubling the update interval (`WeatherRepository.kt`).
 - **Weather line from the provider's summary** (`WeatherGlance.kt`, `WeatherSummary.kt`): current
   weather, then "Today" and "Tonight". At night: current weather, then "Tonight" and "Tomorrow" (or
   "Today" before sunrise). Each with the provider's own icon and temperature, not upstream's daily average
@@ -101,6 +106,8 @@ the [GNU General Public License v3](LICENSE.txt), which also covers this version
   scroll position in composition); settings flows that were recreated on every recomposition
   (clock settings in `Clock()`, which recomposes every second/minute, dock rows, fill height) are
   now remembered; icon cache raised from 200 to 400 entries.
+- **Fix: crashes when the launcher isn't the default home app.** `LauncherApps.getShortcuts` throws
+  `SecurityException` then; the shortcut search and shortcut favorites now handle it.
 - Personal strings live in `app/ui/src/main/res/values/strings_personal.xml`, not upstream's
   `strings.xml`, so translations and upstream string changes merge cleanly.
 - **GitHub Actions release workflow** (`.github/workflows/personal-release.yml`): every push to
