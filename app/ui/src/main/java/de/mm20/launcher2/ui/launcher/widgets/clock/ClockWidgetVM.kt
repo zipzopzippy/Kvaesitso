@@ -73,6 +73,9 @@ class ClockWidgetVM : ViewModel(), KoinComponent {
         .map { if (it) FavoritesPartProvider() else null }
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(), null)
 
+    val dockAboveSearchBar = settings.dockAboveSearchBar
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(), false)
+
     fun updateTime(time: Long) {
         partProviders.value.forEach { it.setTime(time) }
     }

@@ -14,6 +14,11 @@ the [GNU General Public License v3](LICENSE.txt), which also covers this version
   (`SearchBarMenu.kt`).
 - **Filters for disabled search types are hidden** in the filter panel, the keyboard filter bar and
   the default filter settings (`AvailableSearchFilters.kt`).
+- **Dock position** setting (Settings > Home screen, below "Dock rows"):
+  - *Middle of the screen* (default): the dock sits below the clock. In clock fill-height mode
+    it is centered vertically.
+  - *Above search bar*: the dock is pinned just above the search bar and home screen widgets
+    scroll above it (`ClockAndWidgetsHomeComponent.kt`).
 - **Themed icons on the home screen only** (Settings > Icons > "Home screen only"): the dock and
   home screen widgets use themed icons, the app drawer, search and settings don't. `IconService`
   keeps a second, unthemed provider set; grid/list items on the home page (`LocalScaffoldPage`)
@@ -33,6 +38,9 @@ the [GNU General Public License v3](LICENSE.txt), which also covers this version
   fetched from open.er-api.com (free, no key) when currency conversion is on. ECB rates always
   take priority. New file `data/currencies/.../SupplementaryExchangeRates.kt`, one line in
   `ExchangeRateWorker`. Note: this is one extra daily network request to a third party.
+- **Fix: clock and its parts (date, alarm, music) couldn't be tapped** with the dock pinned above
+  the search bar, because the dock's full-screen layer swallowed the taps. The column and the
+  dock now share one container that owns the home screen's tap handling.
 - Personal strings live in `app/ui/src/main/res/values/strings_personal.xml`, not upstream's
   `strings.xml`, so translations and upstream string changes merge cleanly.
 - **GitHub Actions release workflow** (`.github/workflows/personal-release.yml`): every push to

@@ -69,6 +69,7 @@ fun HomescreenSettingsScreen() {
 
     val dock by viewModel.dock.collectAsStateWithLifecycle(null)
     val dockRows by viewModel.dockRows.collectAsStateWithLifecycle(1)
+    val dockAboveSearchBar by viewModel.dockAboveSearchBar.collectAsStateWithLifecycle(false)
     val fixedRotation by viewModel.fixedRotation.collectAsStateWithLifecycle(null)
     val widgetsOnHomeScreen by viewModel.widgetsOnHomeScreen.collectAsStateWithLifecycle(null)
     val editButton by viewModel.widgetEditButton.collectAsStateWithLifecycle(null)
@@ -125,6 +126,20 @@ fun HomescreenSettingsScreen() {
                         max = 4,
                         onValueChanged = {
                             viewModel.setDockRows(it)
+                        }
+                    )
+                }
+                // Personal build: dock position (see MODIFICATIONS.md)
+                AnimatedVisibility(dock == true) {
+                    ListPreference(
+                        title = stringResource(R.string.preference_dock_position),
+                        items = listOf(
+                            stringResource(R.string.preference_dock_position_center) to false,
+                            stringResource(R.string.preference_dock_position_bottom) to true,
+                        ),
+                        value = dockAboveSearchBar,
+                        onValueChanged = {
+                            viewModel.setDockAboveSearchBar(it)
                         }
                     )
                 }

@@ -44,6 +44,10 @@ import de.mm20.launcher2.ui.ktx.toDp
 import de.mm20.launcher2.ui.launcher.scaffold.LauncherScaffoldState
 import de.mm20.launcher2.ui.launcher.widgets.WidgetColumn
 import de.mm20.launcher2.ui.launcher.widgets.clock.ClockWidget
+import de.mm20.launcher2.ui.launcher.widgets.clock.parts.FavoritesPartProvider
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.ui.layout.onSizeChanged
 import kotlinx.coroutines.launch
 import org.koin.compose.koinInject
 
@@ -79,6 +83,12 @@ internal object ClockAndWidgetsHomeComponent : ScaffoldComponent() {
 
         if (fillHeight == null) return
 
+        // Personal build: dock pinned just above the search bar (see MODIFICATIONS.md)
+        val dockAboveSearchBar by remember { clockWidgetSettings.dockAboveSearchBar }.collectAsState(false)
+        val pinDock = dockAboveSearchBar && fillHeight != true && !editMode
+        val pinnedDockProvider = remember { FavoritesPartProvider() }
+        var pinnedDockHeight by remember { mutableIntStateOf(0) }
+
         val topPadding by animateDpAsState(if (editMode) 80.dp else 0.dp)
         val previousScroll = remember { mutableIntStateOf(scrollState.value) }
 
@@ -94,12 +104,17 @@ internal object ClockAndWidgetsHomeComponent : ScaffoldComponent() {
             }
         }
 
+        // Personal build: one container owns the home page modifier (taps, page animation) so the
+        // pinned dock can sit on top of the column without swallowing the clock's taps.
+        Box(modifier = modifier) {
         Column(
-            modifier = modifier
+            modifier = Modifier
+                .fillMaxSize()
                 .verticalScroll(scrollState, enabled = !state.isDragged)
                 .padding(horizontal = 8.dp)
                 .padding(top = topPadding)
-                .padding(insets),
+                .padding(insets)
+                .padding(bottom = if (pinDock) pinnedDockHeight.toDp() else 0.dp),
         ) {
             val bottomPadding by animateDpAsState(
                 if (fillHeight == true && scrollState.value == 0) insets.calculateBottomPadding()
@@ -116,6 +131,7 @@ internal object ClockAndWidgetsHomeComponent : ScaffoldComponent() {
                 } else Modifier,
                 editMode = editMode,
                 fillScreenHeight = fillHeight == true,
+                showDock = !(dockAboveSearchBar && fillHeight != true),
             )
             WidgetColumn(
                 modifier = Modifier
@@ -127,6 +143,19 @@ internal object ClockAndWidgetsHomeComponent : ScaffoldComponent() {
                 },
                 parentId = WidgetScreenTarget.Default.id.toString(),
             )
+        }
+        if (pinDock) {
+            Box(
+                modifier = Modifier
+                    .align(Alignment.BottomCenter)
+                    .padding(insets)
+                    .fillMaxWidth()
+                    .padding(start = 8.dp, end = 8.dp, bottom = 16.dp)
+                    .onSizeChanged { pinnedDockHeight = it.height }
+            ) {
+                pinnedDockProvider.Component(false)
+            }
+        }
         }
         if (editMode) {
             BackHandler {
