@@ -511,7 +511,7 @@ internal class LauncherScaffoldState(
         currentOffset3D = targetOffset
 
         val isOverThreshold = isOverThreshold(gesture.animation, currentOffset3D)
-        if (wasOverThreshold != isOverThreshold) {
+        if (wasOverThreshold != isOverThreshold && gesture.component.hapticFeedback) {
             onHapticFeedback(HapticFeedbackType.GestureThresholdActivate)
         }
     }
@@ -609,13 +609,13 @@ internal class LauncherScaffoldState(
 
         if (gesture.animation == ScaffoldAnimation.Push) {
             val isOverThreshold = isOverThreshold(gesture.animation, targetOffset)
-            if (wasOverThreshold != isOverThreshold) {
+            if (wasOverThreshold != isOverThreshold && gesture.component.hapticFeedback) {
                 onHapticFeedback(HapticFeedbackType.GestureThresholdActivate)
             }
         }
 
         val didPageChange = isSettledOnSecondaryPage != wasPageOpen
-        if (didPageChange && gesture.animation == ScaffoldAnimation.Rubberband) {
+        if (didPageChange && gesture.animation == ScaffoldAnimation.Rubberband && gesture.component.hapticFeedback) {
             onHapticFeedback(HapticFeedbackType.SegmentFrequentTick)
         }
 

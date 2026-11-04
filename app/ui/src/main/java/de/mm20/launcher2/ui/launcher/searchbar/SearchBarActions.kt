@@ -10,10 +10,9 @@ import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.AssistChip
 import androidx.compose.material3.AssistChipDefaults
-import androidx.compose.material3.FloatingActionButtonDefaults
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.SmallFloatingActionButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -74,9 +73,8 @@ fun ColumnScope.SearchBarActions(
                 )
             }
             item {
-                SmallFloatingActionButton(
-                    modifier = Modifier.padding(start = 4.dp),
-                    elevation = FloatingActionButtonDefaults.bottomAppBarFabElevation(),
+                // Personal build: a plain icon button instead of upstream's floating action button
+                IconButton(
                     onClick = {
                         context.startActivity(
                             Intent(context, SettingsActivity::class.java).apply {
@@ -85,7 +83,6 @@ fun ColumnScope.SearchBarActions(
                         )
                     }
                 ) {
-
                     Icon(painterResource(R.drawable.edit_24px), contentDescription = null)
                 }
             }

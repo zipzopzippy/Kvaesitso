@@ -12,6 +12,9 @@ the [GNU General Public License v3](LICENSE.txt), which also covers this version
 - **Search bar menu keeps the keyboard open.** Upstream's menu popup takes input focus, so Android
   drops the keyboard without animating and the search UI jumps. Here the popup isn't focusable
   (`SearchBarMenu.kt`).
+- **No help item in the search bar menu** (`SearchBarMenu.kt`).
+- **Plain edit button on the search actions row**, without upstream's floating action button
+  background (`SearchBarActions.kt`).
 - **Filters for disabled search types are hidden** in the filter panel, the keyboard filter bar and
   the default filter settings (`AvailableSearchFilters.kt`).
 - **Dock position** setting (Settings > Home screen, below "Dock rows"):
@@ -27,6 +30,9 @@ the [GNU General Public License v3](LICENSE.txt), which also covers this version
 - **Discreet profile switcher** (Settings > Search > Apps): the Personal / Work / Private space
   tabs become small right-aligned icon buttons without labels, and the "Lock" button becomes a
   lock icon in the same row (`ui/launcher/search/apps/AppResults.kt`).
+- **No launcher haptics for the notification shade / quick settings gestures**, since the system
+  shade already vibrates (`hapticFeedback = false` on `NotificationsComponent` and
+  `QuickSettingsComponent`; swipe haptics in `LauncherScaffold.kt` now respect that flag).
 - **Device settings in search**: system settings pages (Wi-Fi, Bluetooth, Display, Battery,
   Developer options, ...) show up in the Shortcuts search results with the Settings app's icon
   and can be pinned. Added as a new shortcut type in
