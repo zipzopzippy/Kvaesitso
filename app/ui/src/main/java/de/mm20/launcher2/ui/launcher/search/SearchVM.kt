@@ -121,6 +121,8 @@ class SearchVM : ViewModel(), KoinComponent {
 
     val allAppsEnabled = searchUiSettings.allApps
 
+    val discreetProfileSwitcher = searchUiSettings.discreetProfileSwitcher
+
     val showFilters = mutableStateOf(false)
 
     private val defaultFilters = searchFilterSettings.defaultFilter.stateIn(

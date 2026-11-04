@@ -1,4 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- Personal build additions (see MODIFICATIONS.md). Kept out of core/i18n so upstream merges stay clean. -->
 <resources>
+    <string name="preference_discreet_profile_switcher" translatable="false">Discreet profile switcher</string>
+    <string name="preference_discreet_profile_switcher_summary" translatable="false">Show the personal, work and private space switcher as small icons on the right, without labels</string>
 </resources>

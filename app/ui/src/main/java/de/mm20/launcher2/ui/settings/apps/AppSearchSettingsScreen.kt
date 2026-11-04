@@ -23,6 +23,7 @@ fun AppSearchSettingsScreen() {
 
     val allApps by viewModel.allApps.collectAsStateWithLifecycle()
     val showAppDetails by viewModel.showAppDetails.collectAsStateWithLifecycle()
+    val discreetProfileSwitcher by viewModel.discreetProfileSwitcher.collectAsStateWithLifecycle()
     val showList by viewModel.showList.collectAsStateWithLifecycle()
     val showListIcons by viewModel.showListIcons.collectAsStateWithLifecycle()
 
@@ -46,6 +47,14 @@ fun AppSearchSettingsScreen() {
                     value = showAppDetails == true,
                     onValueChanged = {
                         viewModel.setHideAppDetails(it)
+                    }
+                )
+                SwitchPreference(
+                    title = stringResource(R.string.preference_discreet_profile_switcher),
+                    summary = stringResource(R.string.preference_discreet_profile_switcher_summary),
+                    value = discreetProfileSwitcher == true,
+                    onValueChanged = {
+                        viewModel.setDiscreetProfileSwitcher(it)
                     }
                 )
             }

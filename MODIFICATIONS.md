@@ -14,6 +14,9 @@ the [GNU General Public License v3](LICENSE.txt), which also covers this version
   (`SearchBarMenu.kt`).
 - **Filters for disabled search types are hidden** in the filter panel, the keyboard filter bar and
   the default filter settings (`AvailableSearchFilters.kt`).
+- **Discreet profile switcher** (Settings > Search > Apps): the Personal / Work / Private space
+  tabs become small right-aligned icon buttons without labels, and the "Lock" button becomes a
+  lock icon in the same row (`ui/launcher/search/apps/AppResults.kt`).
 - Personal strings live in `app/ui/src/main/res/values/strings_personal.xml`, not upstream's
   `strings.xml`, so translations and upstream string changes merge cleanly.
 - **GitHub Actions release workflow** (`.github/workflows/personal-release.yml`): every push to
