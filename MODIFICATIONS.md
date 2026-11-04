@@ -97,6 +97,10 @@ the [GNU General Public License v3](LICENSE.txt), which also covers this version
   incrementally (`personal-004`, version `1.41.0-personal.004`), with the commit subjects since
   the previous release as notes. Local builds use the commit (`-personal-<commit>`) instead. Needs the repository secret `DEBUG_KEYSTORE`
   (base64 of the PC's `~/.android/debug.keystore`) so builds keep updating existing installs.
+- **Permissions after restoring a backup**: the "Restored" screen lists the permissions the main
+  features need that aren't granted yet (default launcher / app shortcuts, notification access,
+  contacts, calendar, location, files, work profile / private space), each with a Grant button
+  (`ui/common/RestoredPermissions.kt`, a few lines in `RestoreBackupSheet.kt`, which now scrolls).
 - A `personal` build flavor (`assemblePersonalRelease`): app ID `de.mm20.launcher2.personal`,
   named "Kvaesitso Personal", version suffix `-personal-<commit>`. Installs next to the official
   app. Release builds are signed with the local debug key.
