@@ -11,17 +11,29 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.em
+import de.mm20.launcher2.calendar.CalendarRepository
 import de.mm20.launcher2.ktx.tryStartActivity
+import de.mm20.launcher2.preferences.search.CalendarSearchSettings
+import de.mm20.launcher2.search.CalendarEvent
 import de.mm20.launcher2.ui.base.LocalTime
 import de.mm20.launcher2.ui.locals.LocalCalendarSystems
+import de.mm20.launcher2.ui.locals.LocalTimeFormat
+import de.mm20.launcher2.ui.utils.isTwentyFourHours
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flow
+import org.koin.compose.koinInject
 import java.util.*
 
 class DatePartProvider : PartProvider {
@@ -57,6 +69,7 @@ class DatePartProvider : PartProvider {
                         style = ClockPartText.accent,
                     )
                 }
+                TodayEvent(time - time % 60_000L, primaryCal)
             }
             return
         }
@@ -159,6 +172,82 @@ class DatePartProvider : PartProvider {
         }
     }
 
+}
+
+// Personal build: how often today's events are re-read, so edits in the calendar show up
+private const val EventRefreshInterval = 5 * 60_000L
+
+/**
+ * Personal build: the next timed event today ("Name · 3:00 pm"), else an all-day event ("Name").
+ */
+@OptIn(ExperimentalCoroutinesApi::class)
+@Composable
+private fun TodayEvent(now: Long, primaryCal: android.icu.util.Calendar?) {
+    val calendarRepository: CalendarRepository = koinInject()
+    val calendarSettings: CalendarSearchSettings = koinInject()
+    val (dayStart, dayEnd) = remember(now) { todayBounds(now) }
+
+    val events by remember(dayStart, now / EventRefreshInterval) {
+        calendarSettings.excludedCalendars.flatMapLatest { excluded ->
+            calendarRepository.findMany(
+                from = dayStart,
+                to = dayEnd,
+                excludeCalendars = excluded.toList(),
+            )
+        }
+    }.collectAsState(emptyList())
+
+    val event = remember(events, now) {
+        nextEventToday(events, now, dayStart, dayEnd)
+    } ?: return
+
+    val twentyFourHours = LocalTimeFormat.current.isTwentyFourHours(LocalContext.current)
+    // Date formatters are expensive to create, so only do this when the event changes.
+    val text = remember(event, twentyFourHours, primaryCal) {
+        val name = event.labelOverride ?: event.label
+        if (event.allDay) {
+            name
+        } else {
+            val start = DateFormat
+                .getInstanceForSkeleton(primaryCal, if (twentyFourHours) "Hm" else "hm", ULocale.getDefault())
+                .format(Date(event.startTime!!))
+            "$name · $start"
+        }
+    }
+    Text(
+        text = text,
+        style = ClockPartText.accent,
+        maxLines = 1,
+        overflow = TextOverflow.Ellipsis,
+    )
+}
+
+private fun nextEventToday(
+    events: List<CalendarEvent>,
+    now: Long,
+    dayStart: Long,
+    dayEnd: Long,
+): CalendarEvent? {
+    // The calendar's day range is off by the UTC offset for all-day events, so re-check it here.
+    val today = events.filter { event ->
+        val start = event.startTime
+        !event.isTask && start != null && start < dayEnd && event.endTime >= dayStart
+    }
+    return today.filter { !it.allDay && it.startTime!! > now }.minByOrNull { it.startTime!! }
+        ?: today.firstOrNull { it.allDay }
+}
+
+private fun todayBounds(now: Long): Pair<Long, Long> {
+    val calendar = Calendar.getInstance().apply {
+        timeInMillis = now
+        set(Calendar.HOUR_OF_DAY, 0)
+        set(Calendar.MINUTE, 0)
+        set(Calendar.SECOND, 0)
+        set(Calendar.MILLISECOND, 0)
+    }
+    val start = calendar.timeInMillis
+    calendar.add(Calendar.DAY_OF_YEAR, 1)
+    return start to calendar.timeInMillis
 }
 
 // Personal build: opens the calendar app at today

@@ -54,6 +54,9 @@ the [GNU General Public License v3](LICENSE.txt), which also covers this version
 - **Plain black / white clock** without "Use theme colors": the clock and its text are black (dark
   clock colours) or white instead of a dark / light shade of the theme colour, so the toggle makes
   a visible difference.
+- **Next event under the date**: in the vertical layout, the date part also shows today's next
+  timed event ("Name · 3:00 pm"), or an all-day event ("Name") when no timed event is left. Uses
+  the calendars enabled for search, without tasks (`TodayEvent` in `DatePartProvider.kt`).
 - **Tapping the battery part** under the clock opens the battery settings.
 - **Fix: clock and its parts (date, alarm, music) couldn't be tapped** with the dock pinned above
   the search bar, because the dock's full-screen layer swallowed the taps. The column and the
