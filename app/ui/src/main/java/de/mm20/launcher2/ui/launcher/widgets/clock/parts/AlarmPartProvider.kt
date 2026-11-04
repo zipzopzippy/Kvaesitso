@@ -7,6 +7,8 @@ import android.content.Intent
 import android.content.IntentFilter
 import android.provider.AlarmClock
 import android.text.format.DateUtils
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.*
@@ -14,6 +16,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
@@ -79,6 +82,25 @@ class AlarmPartProvider : PartProvider {
         alarmTime?.let {
 
             if (!compactLayout) {
+                // Personal build: compact alarm line in the shared clock part style (see MODIFICATIONS.md)
+                Row(
+                    modifier = Modifier
+                        .clickable { context.tryStartActivity(Intent(AlarmClock.ACTION_SHOW_ALARMS)) }
+                        .then(ClockPartText.padding),
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
+                    Icon(
+                        painterResource(R.drawable.alarm_24px),
+                        contentDescription = null,
+                        modifier = Modifier.size(18.dp),
+                    )
+                    Text(
+                        modifier = Modifier.padding(start = 8.dp),
+                        text = DateUtils.getRelativeTimeSpanString(it, time, DateUtils.MINUTE_IN_MILLIS).toString(),
+                        style = ClockPartText.main,
+                    )
+                }
+            } else if (false) {
 
                 TextButton(
                     onClick = {

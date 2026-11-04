@@ -4,6 +4,9 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
+import androidx.compose.foundation.clickable
+import androidx.compose.ui.platform.LocalContext
+import de.mm20.launcher2.ktx.tryStartActivity
 import android.os.BatteryManager
 import android.os.Build
 import androidx.compose.foundation.layout.Column
@@ -59,12 +62,13 @@ class BatteryPartProvider(
     override fun Component(compactLayout: Boolean) {
 
         val batteryInfo by this.batteryInfo.collectAsState(null)
+        val context = LocalContext.current
 
         batteryInfo?.let {
 
             if (!compactLayout) {
                 Row(
-                    Modifier.padding(8.dp),
+                    Modifier.clickable { openBatterySettings(context) }.then(ClockPartText.padding), // Personal build
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
                     Icon(
@@ -75,7 +79,7 @@ class BatteryPartProvider(
                     Text(
                         modifier = Modifier.padding(start = 8.dp).alignByBaseline(),
                         text = formatPercent(it.level.toFloat()),
-                        style = MaterialTheme.typography.titleMedium,
+                        style = ClockPartText.main, // Personal build
                     )
                     if (it.charging) {
                         Text(
@@ -84,14 +88,14 @@ class BatteryPartProvider(
                                 val m = (it / 60000).toInt()
                                 pluralStringResource(R.plurals.battery_part_remaining_charge_time, m, m)
                             } ?: stringResource(R.string.battery_part_charging),
-                            style = MaterialTheme.typography.bodySmall
+                            style = ClockPartText.accent // Personal build
                         )
                     }
                 }
             }
             if (compactLayout) {
                 Row(
-                    Modifier.padding(8.dp),
+                    Modifier.clickable { openBatterySettings(context) }.padding(8.dp), // Personal build
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Icon(
@@ -117,6 +121,13 @@ class BatteryPartProvider(
                 }
             }
         }
+    }
+
+    // Personal build: tapping the battery part opens the battery settings (see MODIFICATIONS.md)
+    private fun openBatterySettings(context: Context) {
+        context.tryStartActivity(
+            Intent(Intent.ACTION_POWER_USAGE_SUMMARY).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+        )
     }
 
     private fun getBatteryIcon(batteryInfo: BatteryInfo): Int {
