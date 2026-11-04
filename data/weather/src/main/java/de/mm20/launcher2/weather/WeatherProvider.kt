@@ -7,9 +7,16 @@ import org.koin.core.parameter.parametersOf
 
 interface WeatherProvider {
 
+    /** Whether the provider picks the location itself, so that no location setting is needed. */
+    val managesLocation: Boolean
+        get() = false
+
     suspend fun getUpdateInterval(): Long {
         return 1000 * 60 * 60L
     }
+
+    /** The provider's own summary, if it offers one. */
+    suspend fun getSummary(): WeatherSummary? = null
 
     suspend fun getWeatherData(location: WeatherLocation): List<Forecast>?
     suspend fun getWeatherData(lat: Double, lon: Double): List<Forecast>?

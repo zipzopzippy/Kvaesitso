@@ -698,7 +698,6 @@
     <string name="preference_launch_tasks_app">Abrir aplicación Tasks</string>
     <string name="action_done">Hecho</string>
     <string name="missing_permission_call_contacts_settings">Se requiere el permiso de teléfono para marcar</string>
-    <string name="preference_breezyweather_integration_instructions">Para usar Breezy Weather como un proveedor de clima:\n\n1. Abre Breezy Weather &gt; Configuración &gt; Complementos y fondos de pantalla animados &gt; Enviar los datos meteorológicos a GadgetBridge &gt; Habilita %1$s\n\n2. En %1$s, selecciona Breezy Weather como proveedor de clima</string>
     <plurals name="app_info_notifications">
         <item quantity="one">%1$s notificación</item>
         <item quantity="many">%1$s notificaciones</item>
@@ -762,7 +761,6 @@
     <string name="weather_widget_no_provider">No se ha seleccionado un proveedor de clima o el proveedor seleccionado no está disponible</string>
     <string name="music_widget_play">Reproducir</string>
     <string name="plugin_type_locationsearch">Búsqueda de lugares</string>
-    <string name="preference_breezyweather_integration">Breezy Weather</string>
     <string name="poi_category_pet">Tienda de mascotas</string>
     <string name="poi_category_shopping">Compras</string>
     <string name="poi_category_place_of_worship">Lugar de culto</string>
@@ -810,7 +808,6 @@
     <string name="preference_search_osm_locations_summary">Buscar en OpenStreetMap comercios y otros lugares en el área local</string>
     <string name="profile_work_profile_action_unlock">Reanudar</string>
     <string name="plugin_type_contacts">Contactos</string>
-    <string name="preference_breezyweather_integration_description">Breezy Weather es una aplicación meteorológica gratuita y de código abierto. Si está instalada, %1$s puede usar Breezy Weather como una fuente de datos para información meteorológica.</string>
     <string name="poi_category_casino">Casino</string>
     <string name="preference_tasks_integration">Tasks</string>
     <string name="preference_tasks_integration_description">Tasks es una aplicación de listas de tareas y recordatorios gratuita y de código abierto. Si está instalada, %1$s puede mostrar y buscar tus tareas de la aplicación Tasks.</string>
@@ -824,7 +821,6 @@
     <string name="poi_category_hindu_temple">Templo hindú</string>
     <string name="poi_category_church">Iglesia</string>
     <string name="poi_category_asian_restaurant">Restaurante asiático</string>
-    <string name="preference_launch_breezyweather_app">Abrir Breezy Weather</string>
     <string name="poi_category_mosque">Mezquita</string>
     <string name="poi_category_buddhist_temple">Templo budista</string>
     <string name="poi_category_chinese_restaurant">Restaurante chino</string>

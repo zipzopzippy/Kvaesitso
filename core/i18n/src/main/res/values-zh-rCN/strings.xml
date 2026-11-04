@@ -813,10 +813,8 @@
     <string name="weather_condition_thunder">雷雨</string>
     <string name="weather_condition_haze">雾霾</string>
     <string name="preference_search_tasks">任务</string>
-    <string name="preference_launch_breezyweather_app">打开 Breezy Weather</string>
     <string name="no_selection">未选</string>
     <string name="save_as_file">保存为文件</string>
-    <string name="preference_breezyweather_integration">Breezy Weather</string>
     <string name="theme_bundle_name">名称</string>
     <string name="theme_bundle_author">作者</string>
     <string name="provider_breezy">Breezy Weather</string>
@@ -828,7 +826,6 @@
     <string name="confirmation_delete_typography_scheme">删除字体预设“%1$s”吗？</string>
     <string name="bad_configuration_title">恭喜！你给你自个儿锁里头了！</string>
     <string name="missing_permission_tasks_integration">需要 Tasks 权限来接入 Tasks 应用</string>
-    <string name="preference_breezyweather_integration_instructions">要使用 Breezy Weather 作为天气数据源：\n\n1. 启用 Breezy Weather &gt; 设置 &gt; 微件与动态壁纸 &gt; 发送天气数据到 Gadgetbridge 中的 %1$s\n\n2. 在 %1$s 中将 Breezy Weather 设为天气数据源</string>
     <string name="action_install">安装</string>
     <string name="preference_tasks_integration">Tasks</string>
     <string name="preference_tasks_integration_ready">已成功接入 Tasks 并可以开始使用了。</string>
@@ -839,7 +836,6 @@
     <string name="missing_permission_tasks_search_settings">需要 Tasks 应用权限来在 Tasks app 中搜索任务</string>
     <string name="preference_screen_typography">文字</string>
     <string name="preference_typography_fonts">字体样式</string>
-    <string name="preference_breezyweather_integration_description">Breezy Weather 是一款免费的开源天气应用。安装后 %1$s 可将其作为天气数据的数据源。</string>
     <string name="font_name_device_body">正文字体</string>
     <string name="font_category_generic">常规字体</string>
     <string name="preference_widgets_on_home_screen">直达组件</string>

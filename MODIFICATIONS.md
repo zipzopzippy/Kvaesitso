@@ -66,6 +66,12 @@ the [GNU General Public License v3](LICENSE.txt), which also covers this version
   here only the apps ticked in Media control count, whatever kind of app they are (`MusicService.kt`,
   `MediaIntegrationSettingsScreenVM.kt`). If several have a session, whichever is playing wins, else
   the newest.
+- **Breezy Weather through its data sharing provider** instead of upstream's Gadgetbridge broadcast
+  (`BreezyWeatherProvider.kt`), which has no precipitation amounts. It reads the first location in
+  Breezy and needs the "Read Breezy Weather data" permission (requested in the weather settings).
+  Breezy announces new data through its update notifier (enable the launcher for it in Breezy's
+  settings), with an hourly check as a fallback. Upstream's Breezy integration screen and its setup
+  instructions are removed.
 - **Next event under the date**: in the vertical layout, the date part also shows today's next
   timed event ("Name · 3:00 pm"), or an all-day event ("Name") when no timed event is left. Uses
   the calendars enabled for search, without tasks (`TodayEvent` in `DatePartProvider.kt`).

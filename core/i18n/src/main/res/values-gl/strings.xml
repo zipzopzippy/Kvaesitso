@@ -522,10 +522,6 @@
     <string name="preference_tasks_integration_description">Tasks é unha aplicación gratuíta e de código aberto para xestionar listas de tarefas e recordatorios. Se está instalada, %1$s pode amosar e buscar as túas tarefas da aplicación Tasks.</string>
     <string name="preference_tasks_integration_ready">A integración de tarefas está totalmente configurada e lista para usar.</string>
     <string name="preference_launch_tasks_app">Abrir a aplicación Tasks</string>
-    <string name="preference_breezyweather_integration">Breezy Weather</string>
-    <string name="preference_breezyweather_integration_description">Breezy Weather é unha aplicación meteorolóxica gratuíta e de código aberto. Se está instalada, %1$s pode utilizar Breezy Weather como fonte de datos meteorolóxicos.</string>
-    <string name="preference_breezyweather_integration_instructions">Para usar Breezy Weather como provedor da información meteorolóxica:\n\n1. Vai a Breezy Weather &gt; Configuración &gt; Widgets e fondo da pantalla animado &gt; Enviar datos a Gadgetbridge &gt; Activar %1$s\n\n2. En %1$s, selecciona Breezy Weather como provedor da información meteorolóxica</string>
-    <string name="preference_launch_breezyweather_app">Abrir Breezy Weather</string>
     <string name="preference_smartspacer_integration">Smartspacer</string>
     <string name="preference_smartspacer_integration_description">Smartspacer é un widget «At a Glance» gratuíto e de código aberto. Se se instala, pode integrarse na zona dinámica do widget do reloxo</string>
     <string name="preference_smartspacer_enable">Activar a integración con Smartspacer</string>

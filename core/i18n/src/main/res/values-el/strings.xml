@@ -556,8 +556,6 @@
     <string name="preference_widgets_on_home_screen_summary">Εμφάνιση των widget στην αρχική οθόνη αντί σε ξεχωριστή σελίδα</string>
     <string name="preference_tasks_integration">Εργασίες</string>
     <string name="preference_launch_tasks_app">Άνοιγμα εφαρμογής Tasks</string>
-    <string name="preference_breezyweather_integration">Breezy Weather</string>
-    <string name="preference_launch_breezyweather_app">Άνοιγμα Breezy Weather</string>
     <string name="preference_smartspacer_integration">Smartspacer</string>
     <string name="preference_launch_smartspacer_app">Άνοιγμα Smartspacer</string>
     <string name="preference_contacts_call_on_tap">Πατήστε για κλήση</string>

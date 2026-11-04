@@ -809,13 +809,9 @@
     <string name="weather_condition_haze">陰霾</string>
     <string name="weather_condition_thunder">打雷</string>
     <string name="provider_breezy">Breezy Weather</string>
-    <string name="preference_breezyweather_integration">Breezy Weather</string>
-    <string name="preference_breezyweather_integration_description">Breezy Weather 是一個開源的天氣應用程式。若已安裝，%1$s 可以取用 Breezy Weather 的天氣資料。</string>
     <string name="no_selection">尚未選擇</string>
     <string name="save_as_file">匯出為檔案</string>
     <string name="preference_location_breezy">管理 Breezy Weather 位置</string>
-    <string name="preference_breezyweather_integration_instructions">若要將 Breezy Weather 設為天氣資訊提供者：\n\n1. 開啟 Breezy Weather &gt; 設定 &gt; 小工具與動態桌布 &gt; 傳送天氣資料到 Gadgetbridge &gt; 開啟 %1$s\n\n2. 在 %1$s 中選擇 Breezy Weather 當作天氣資訊提供者</string>
-    <string name="preference_launch_breezyweather_app">開啟 Breezy Weather</string>
     <string name="action_install">安裝</string>
     <string name="preference_search_tasks_summary">於 Tasks 應用程式搜尋任務</string>
     <string name="preference_search_tasks">Tasks</string>

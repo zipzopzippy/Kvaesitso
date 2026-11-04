@@ -256,7 +256,6 @@
     <string name="preference_media_integration">Multimeedia</string>
     <string name="preference_tasks_integration">Ülesanded</string>
     <string name="preference_launch_tasks_app">Ava rakendus Tasks</string>
-    <string name="preference_launch_breezyweather_app">Ava Breezy Weather</string>
     <string name="battery_part_charging">Laadimine</string>
     <string name="backup_complete">Varukoopia loomine on tehtud.</string>
     <string name="icon_picker_suggestions">Soovitused</string>

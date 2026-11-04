@@ -609,9 +609,6 @@
     <string name="preference_search_supportedunits">Onartutako unitateak</string>
     <string name="provider_breezy">Breezy Weather</string>
     <string name="preference_location_breezy">Breezy Weather-en kokapena kudeatu</string>
-    <string name="preference_breezyweather_integration">Breezy Weather</string>
-    <string name="preference_breezyweather_integration_instructions">Breezy Weather eguraldi hornitzaile gisa erabiltzeko:\n\n1. Joan hona: Breezy Weather &gt; Ezarpenak &gt; Trepetak eta horma-papera animatua &gt; Bidali eguraldi datuak Gadgetbridge-ra &gt; Gaitu %1$s\n\n2. %1$s-n, hautatu Breezy Weather eguraldi hornitzaile gisa</string>
-    <string name="preference_launch_breezyweather_app">Ireki Breezy Weather</string>
     <string name="action_install">Instalatu</string>
     <string name="preference_search_tasks_summary">Zereginak bilatu Tasks aplikazioan</string>
     <string name="preference_plugin_badges">Plugin biribiltxoak</string>
@@ -687,7 +684,6 @@
     <string name="preference_tasks_integration">Zereginak</string>
     <string name="preference_tasks_integration_description">Zereginak egitekoen zerrenden eta abisuen doako eta kode irekiko aplikazioa da. Instalatuta badago, %1$s-ek zure zereginak bistara eta bilatu ditzake Zereginak aplikaziotik.</string>
     <string name="preference_tasks_integration_ready">Zereginen integrazioa guztiz konfiguratuta eta erabiltzeko prest dago.</string>
-    <string name="preference_breezyweather_integration_description">Breezy Weather doako eta kode irekiko eguraldi aplikazio bat da. Instalatuta badago, %1$s-(e)k Breezy Weather erabil dezake eguraldi datuetarako datu-iturri gisa.</string>
     <string name="search_action_websearch_url_hint">Web bilaketaren URLa eraikitzeko erabiltzen den URL txantiloia. Erabili \'${1}\' benetako bilaketa-terminoaren leku-marka gisa</string>
     <string name="tag_icon_customicon">Ikonoa</string>
     <string name="preference_gesture_swipe_up">Gora irristatu</string>

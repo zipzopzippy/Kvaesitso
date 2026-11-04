@@ -45,6 +45,8 @@ data class Forecast(
     val windDirection: Double? = null,
     /** rain, in mm per hour **/
     val precipitation: Double? = null,
+    /** the part of [precipitation] that falls as snow, in mm per hour **/
+    val snow: Double? = null,
     /** UV index **/
     val uvIndex: Double? = null,
     /** whether this forecast is during nighttime (whether a moon icon should be used instead of sun) **/
@@ -80,7 +82,7 @@ data class Forecast(
             updateTime = updateTime,
             windDirection = windDirection ?: -1.0,
             windSpeed = windSpeed ?: -1.0,
-            snow = -1.0,
+            snow = snow ?: -1.0,
             uvIndex = uvIndex ?: -1.0,
         )
     }
@@ -99,6 +101,7 @@ data class Forecast(
         provider = entity.provider,
         providerUrl = entity.providerUrl,
         precipitation = entity.precipitation.takeIf { it >= 0.0 },
+        snow = entity.snow.takeIf { it >= 0.0 },
         precipProbability = entity.precipProbability.takeIf { it >= 0 },
         temperature = entity.temperature,
         updateTime = entity.updateTime,

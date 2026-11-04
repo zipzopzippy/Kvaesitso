@@ -828,11 +828,9 @@
     <string name="missing_permission_call_contacts_settings">Для выканання выклікаў патрэбны доступ да тэлефону</string>
     <string name="departure_time_now">зараз</string>
     <string name="import_theme_contents">Змесціва</string>
-    <string name="preference_launch_breezyweather_app">Адкрыць Breezy Weather</string>
     <string name="preference_launch_tasks_app">Адкрыць Tasks</string>
     <string name="plugin_type_contacts">Кантакты</string>
     <string name="bad_configuration_title">Віншую, вы закрылі самі сябе!</string>
-    <string name="preference_breezyweather_integration_description">Breezy Weather — гэта бясплатная праграма з адкрытым зыходным кодам для паказу надвор\'я. Калі яна ўсталяваная, %1$s можа выкарыстоўваць Breezy Weather як крыніцу даных аб надвор\'і.</string>
     <plurals name="departure_time_in">
         <item quantity="one">праз %1$d хвіліну</item>
         <item quantity="few">праз %1$d хвіліны</item>
@@ -847,14 +845,12 @@
     <string name="preference_search_local_calendar_summary">Пошук праз календары на гэтай прыладзе</string>
     <string name="preference_contacts_call_on_tap_summary">Выклікаць без папярэджання адразу пасля націскання на нумар</string>
     <string name="confirmation_delete_transparencies_scheme">Вы сапраўды хочаце выдаліць схему празрыстасці «%1$s»?</string>
-    <string name="preference_breezyweather_integration">Breezy Weather</string>
     <string name="new_theme_name">(без назвы)</string>
     <string name="theme_export_title">Экспартаваць тэму</string>
     <string name="theme_bundle_name">Назва</string>
     <string name="theme_bundle_author">Аўтар</string>
     <string name="import_theme_exists">Тэма ўжо існуе, таму будзе абноўлена</string>
     <string name="theme_import_title">Імпартаваць тэму</string>
-    <string name="preference_breezyweather_integration_instructions">Каб выкарыстоўваць Breezy Weather як пастаўшчыка дадзеных аб надвор\'і:\n\n1. Перайдзіце ў Breezy Weather &gt; Налады &gt; Віджэты і жывыя шпалеры &gt; Адпраўляць даныя пра надвор’е ў Gadgetbridge &gt; Уключыце %1$s\n\n2. Выберыце Breezy Weather як пастаўшчыка надвор\'я ў %1$s</string>
     <string name="preference_tasks_integration">Tasks</string>
     <string name="preference_tasks_integration_description">Tasks — гэта бясплатная праграма з адкрытым зыходным кодам для вядзення спіса задач і стварэння напамінаў. Калі яна ўсталяваная, %1$s можа паказваць задачы адтуль у пошуку.</string>
     <string name="confirmation_delete_shapes_scheme">Вы сапраўды хочаце выдаліць схему фігур «%1$s»?</string>

@@ -816,8 +816,6 @@
     <string name="weather_condition_thunder">Tonnerre</string>
     <string name="weather_condition_haze">Brume</string>
     <string name="provider_breezy">Breezy Weather</string>
-    <string name="preference_breezyweather_integration">Breezy Weather</string>
-    <string name="preference_breezyweather_integration_description">Breezy Weather est une application de météo gratuite et open-source. Si installée, %1$s peut utiliser Breezy Weather comme source pour les données météo.</string>
     <string name="action_install">Installer</string>
     <string name="preference_clock_widget_time_format_12h">12 heures</string>
     <string name="preference_clock_widget_time_format_24h">24 heures</string>
@@ -833,7 +831,6 @@
     <string name="preference_location_breezy">Gestion de l\'emplacement dans Breezy Weather</string>
     <string name="preference_search_tasks">Tâches</string>
     <string name="preference_search_tasks_summary">Rechercher des tâches dans l\'application Tasks</string>
-    <string name="preference_launch_breezyweather_app">Ouvrir Breezy Weather</string>
     <string name="missing_permission_tasks_integration">L\'autorisation Tâches est nécessaire pour utiliser l\'intégration avec Tasks</string>
     <string name="missing_permission_tasks_search_settings">L\'autorisation Tâches est nécessaire pour rechercher des tâches dans l’application Tasks</string>
     <string name="preference_clock_widget_time_format">Format de l\'heure</string>
@@ -851,7 +848,6 @@
         <item quantity="other">+%1$d tâches non terminées</item>
     </plurals>
     <string name="preference_grid_list_style_summary">Afficher les applications en tant que liste plutôt que grille</string>
-    <string name="preference_breezyweather_integration_instructions">Pour ouvrir Breezy Weather comme fournisseur météo :\n\n1. Se rendre dans Breezy Weather &gt; Paramètres &gt; Widgets &amp; Fond d\'écran animé &gt; Envoyer des données Gadgetbridge &gt; Activer %1$s\n\n2. Dans %1$s, sélectionner Breezy Weather comme fournisseur météo</string>
     <string name="profile_work_profile_state_locked">Les applications professionnelles sont en pause</string>
     <string name="preference_tasks_integration_ready">L\'intégration avec Tasks est entièrement configurée et est prête à l\'usage.</string>
     <string name="preference_contacts_call_on_tap">Appuyer pour appeler</string>

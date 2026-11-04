@@ -801,10 +801,6 @@
     <string name="weather_condition_haze">Nevel</string>
     <string name="provider_breezy">Breezy Weather</string>
     <string name="preference_location_breezy">Locatie beheren in Breezy Weather</string>
-    <string name="preference_breezyweather_integration">Breezy Weather</string>
-    <string name="preference_breezyweather_integration_description">Breezy Weather is een gratis en open-source weer-app. Indien geïnstalleerd, kan %1$s Breezy Weather gebruiken als gegevensbron voor weergegevens.</string>
-    <string name="preference_launch_breezyweather_app">Breezy Weather openen</string>
-    <string name="preference_breezyweather_integration_instructions">Om Breezy Weather te gebruiken als leverancier van weergegevens:\n\n1. Ga naar Breezy Weather &gt; Settings &gt; Widgets &amp; Live wallpaper &gt; Send Gadgetbridge data &gt; Enable %1$s\n\n2. Selecteer in %1$s Breezy Weather als leverancier van weergegevens</string>
     <string name="action_install">Installeren</string>
     <string name="missing_permission_tasks_search_settings">Toestemming voor taken is vereist om taken te zoeken in de Tasks-applicatitie</string>
     <string name="missing_permission_tasks_integration">Toestemming voor taken is vereist om de takenintegratie te gebruiken</string>

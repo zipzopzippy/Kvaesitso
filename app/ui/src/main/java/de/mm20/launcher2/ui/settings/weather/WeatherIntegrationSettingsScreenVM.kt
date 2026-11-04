@@ -57,6 +57,13 @@ class WeatherIntegrationSettingsScreenVM : ViewModel(), KoinComponent {
         permissionsManager.requestPermission(activity, PermissionGroup.Location)
     }
 
+    val hasBreezyWeatherPermission = permissionsManager.hasPermission(PermissionGroup.BreezyWeather)
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(), null)
+
+    fun requestBreezyWeatherPermission(activity: AppCompatActivity) {
+        permissionsManager.requestPermission(activity, PermissionGroup.BreezyWeather)
+    }
+
     fun clearWeatherData() {
         repository.deleteForecasts()
     }

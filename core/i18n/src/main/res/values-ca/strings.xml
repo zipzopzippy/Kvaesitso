@@ -811,9 +811,6 @@
     <string name="weather_condition_haze">Enboirat</string>
     <string name="preference_location_breezy">Gestiona la ubicació a Breezy Weather</string>
     <string name="provider_breezy">Breezy Weather</string>
-    <string name="preference_breezyweather_integration">Breezy Weather</string>
-    <string name="preference_breezyweather_integration_description">Breezy Weather és una aplicació meteorològica gratuïta i de codi obert. Si està instal·lada, %1$s pot utilitzar Breezy Weather com a font de dades per a les dades meteorològiques.</string>
-    <string name="preference_launch_breezyweather_app">Obre Breezy Weather</string>
     <string name="departure_time_departed">El vol ha sortit</string>
     <string name="clock_variant_analog_ticks">Ticks</string>
     <string name="theme_bundle_name">Nom</string>
@@ -843,7 +840,6 @@
     </plurals>
     <string name="preference_screen_typography">Tipografia</string>
     <string name="preference_tasks_integration">Tasques</string>
-    <string name="preference_breezyweather_integration_instructions">Per utilitzar Breezy Weather com a proveïdor meteorològic:\n\n1. Aneu a Breezy Weather &gt; Configuració &gt; Widgets i fons de pantalla animats &gt; Envia dades de Gadgetbridge &gt; Activa %1$s\n\n2. A %1$s, seleccioneu Breezy Weather com a proveïdor meteorològic</string>
     <string name="confirmation_delete_typography_scheme">De veritat voleu suprimir l\'esquema tipogràfic %1$s?</string>
     <string name="confirmation_delete_transparencies_scheme">De veritat voleu suprimir l\'esquema de transparència %1$s?</string>
     <string name="new_theme_name">(sense títol)</string>

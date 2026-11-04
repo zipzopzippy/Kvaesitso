@@ -814,15 +814,11 @@
     <string name="provider_breezy">Breezy Weather</string>
     <string name="preference_search_tasks">Attività</string>
     <string name="preference_search_tasks_summary">Cerca attività nell\'app Tasks</string>
-    <string name="preference_launch_breezyweather_app">Apri Breezy Weather</string>
-    <string name="preference_breezyweather_integration_instructions">Per utilizzare Breezy Weather come fornitore di servizi meteo:\n\n1. Vai su Breezy Weather &gt; Impostazioni &gt; Widget e sfondi animati &gt; Invia dati Gadgetbridge &gt; Abilita %1$s\n\n2. In %1$s, seleziona Breezy Weather come fornitore di servizi meteo</string>
-    <string name="preference_breezyweather_integration_description">Breezy Weather è un\'app meteo gratuita e open source. Se installata, %1$s può utilizzare Breezy Weather come fonte di dati meteo.</string>
     <string name="action_install">Installa</string>
     <string name="missing_permission_tasks_search_settings">È richiesta l\'autorizzazione Attività per cercare le attività nell\'app Attività</string>
     <string name="preference_tasks_integration">Tasks</string>
     <string name="preference_tasks_integration_ready">L\'integrazione con Tasks è completamente configurata e pronta all\'uso.</string>
     <string name="preference_tasks_integration_description">Tasks è un\'app gratuita e open source per liste di cose da fare e promemoria. Se installata, %1$s può visualizzare e cercare le tue attività dall\'app Tasks.</string>
-    <string name="preference_breezyweather_integration">Breezy Weather</string>
     <plurals name="calendar_widget_running_tasks">
         <item quantity="one">+%1$d attività non completata</item>
         <item quantity="many">+%1$d attività non completate</item>

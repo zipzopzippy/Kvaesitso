@@ -2,10 +2,12 @@
 
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
 
+    <uses-permission android:name="org.breezyweather.READ_PROVIDER" />
+
     <application>
         <receiver android:name=".breezy.BreezyWeatherReceiver" android:exported="true">
             <intent-filter>
-                <action android:name="nodomain.freeyourgadget.gadgetbridge.ACTION_GENERIC_WEATHER" />
+                <action android:name="org.breezyweather.ACTION_UPDATE_NOTIFIER" />
             </intent-filter>
         </receiver>
     </application>
