@@ -66,6 +66,8 @@ class LauncherShortcutDeserializer(
                     launcherApps.getShortcuts(query, user)
                 } catch (e: IllegalStateException) {
                     return null
+                } catch (e: SecurityException) {
+                    return null
                 }
                 if (shortcuts.isNullOrEmpty()) {
                     return null
