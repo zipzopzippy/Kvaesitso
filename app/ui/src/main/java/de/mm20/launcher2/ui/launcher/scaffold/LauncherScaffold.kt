@@ -35,7 +35,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.ime
 import androidx.compose.foundation.layout.imeAnimationSource
 import androidx.compose.foundation.layout.imeAnimationTarget
-import androidx.compose.foundation.layout.isImeVisible
 import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.offset
@@ -1073,20 +1072,19 @@ internal fun LauncherScaffold(
             else 104.dp
         )
 
-        val isFilterBarVisible =
-            (state.currentProgress == 1f && state.currentComponent is SearchComponent ||
-                    state.currentProgress == 0f && config.homeComponent is SearchComponent) &&
-                    filterBar && WindowInsets.isImeVisible
-
+        val isSearchOpen = state.currentComponent is SearchComponent && state.isSettledOnSecondaryPage ||
+                config.homeComponent is SearchComponent && !state.isSettledOnSecondaryPage
 
         val imeCurrent = WindowInsets.ime.getBottom(LocalDensity.current).toFloat()
         val imeSource = WindowInsets.imeAnimationSource.getBottom(LocalDensity.current).toFloat()
         val imeTarget = WindowInsets.imeAnimationTarget.getBottom(LocalDensity.current).toFloat()
-        val imeProgress = (imeCurrent /
-                (imeSource - imeTarget).absoluteValue.coerceAtLeast(imeCurrent))
-            .coerceIn(0f, 1f)
+        val imeRange = (imeSource - imeTarget).absoluteValue.coerceAtLeast(imeCurrent)
+        val imeProgress = if (imeRange > 0f) (imeCurrent / imeRange).coerceIn(0f, 1f) else 0f
 
-        val filterBarHeight by animateDpAsState(if (isFilterBarVisible) imeProgress * 50.dp else 0.dp)
+        // Personal build: the filter bar follows the keyboard's position frame by frame, so that it
+        // moves in sync with the keyboard (see MODIFICATIONS.md)
+        val isFilterBarVisible = filterBar && isSearchOpen && imeProgress > 0f
+        val filterBarHeight = if (isFilterBarVisible) imeProgress * 50.dp else 0.dp
 
         LaunchedEffect(state) {
             config.homeComponent.onPreActivate(state)
@@ -1397,8 +1395,7 @@ internal fun LauncherScaffold(
                     } else null,
                     highlightedAction = highlightedResult as? SearchAction,
                     darkColors = config.darkSearchBar,
-                    isSearchOpen = state.currentComponent is SearchComponent && state.isSettledOnSecondaryPage ||
-                            config.homeComponent is SearchComponent && !state.isSettledOnSecondaryPage,
+                    isSearchOpen = isSearchOpen,
                 )
             }
             if (isFilterBarVisible) {
