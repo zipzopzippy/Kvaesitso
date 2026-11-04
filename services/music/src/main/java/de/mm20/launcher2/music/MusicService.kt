@@ -47,6 +47,8 @@ import java.io.IOException
 
 interface MusicService {
     val playbackState: Flow<PlaybackState>
+    /** Whether the current player declares itself as a music player, unlike e.g. a video app. */
+    val isMusicPlayer: Flow<Boolean>
     val title: Flow<String?>
     val artist: Flow<String?>
     val album: Flow<String?>
@@ -127,6 +129,10 @@ internal class MusicServiceImpl(
                 }
             }
             .shareIn(scope, SharingStarted.WhileSubscribed(), 1)
+
+    override val isMusicPlayer: Flow<Boolean> = currentMediaController.map { controller ->
+        controller == null || getInstalledPlayerPackages().contains(controller.packageName)
+    }
 
     private val currentMetadata: SharedFlow<MediaMetadata?> = channelFlow {
         currentMediaController.collectLatest { controller ->

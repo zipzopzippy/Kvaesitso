@@ -6,11 +6,13 @@ import android.content.Intent
 import android.icu.text.DateFormat
 import android.icu.util.ULocale
 import android.provider.CalendarContract
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -38,6 +40,26 @@ class DatePartProvider : PartProvider {
 
         val primaryCal = calendars.first()
         val secondaryCal = calendars.getOrNull(1)
+
+        // Personal build: compact date in the shared clock part style (see MODIFICATIONS.md)
+        if (verticalLayout) {
+            Column(
+                modifier = Modifier.clickable { openCalendar(context) }.then(ClockPartText.padding),
+                horizontalAlignment = Alignment.CenterHorizontally,
+            ) {
+                Text(
+                    text = DateFormat.getInstanceForSkeleton(primaryCal, "EEEE, MMMM d, yyyy", ULocale.getDefault()).format(date),
+                    style = ClockPartText.main,
+                )
+                if (secondaryCal != null) {
+                    Text(
+                        text = DateFormat.getInstanceForSkeleton(secondaryCal, "MMMM dd, yyyy", ULocale.getDefault()).format(date),
+                        style = ClockPartText.accent,
+                    )
+                }
+            }
+            return
+        }
 
         TextButton(
             colors = ButtonDefaults.textButtonColors(
@@ -137,4 +159,12 @@ class DatePartProvider : PartProvider {
         }
     }
 
+}
+
+// Personal build: opens the calendar app at today
+private fun openCalendar(context: Context) {
+    val builder = CalendarContract.CONTENT_URI.buildUpon()
+    builder.appendPath("time")
+    ContentUris.appendId(builder, System.currentTimeMillis())
+    context.tryStartActivity(Intent(Intent.ACTION_VIEW).setData(builder.build()).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK))
 }

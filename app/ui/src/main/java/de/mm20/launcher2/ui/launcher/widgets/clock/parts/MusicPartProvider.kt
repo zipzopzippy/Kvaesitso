@@ -10,10 +10,12 @@ import androidx.compose.animation.graphics.res.animatedVectorResource
 import androidx.compose.animation.graphics.res.rememberAnimatedVectorPainter
 import androidx.compose.animation.graphics.vector.AnimatedImageVector
 import androidx.compose.animation.togetherWith
+import androidx.compose.foundation.basicMarquee
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -29,7 +31,9 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
@@ -64,6 +68,7 @@ class MusicPartProvider : PartProvider, KoinComponent {
         val artist by musicService.artist.collectAsState(null)
         val state by musicService.playbackState.collectAsState(PlaybackState.Stopped)
         val supportedActions by musicService.supportedActions.collectAsState(SupportedActions())
+        val isMusicPlayer by musicService.isMusicPlayer.collectAsState(true)
 
         if (compactLayout) {
             CompositionLocalProvider(
@@ -147,7 +152,7 @@ class MusicPartProvider : PartProvider, KoinComponent {
         }
         if (!compactLayout) {
             Column(
-                modifier = Modifier.padding(8.dp),
+                modifier = Modifier.padding(4.dp), // Personal build: less padding
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Column(
@@ -165,23 +170,32 @@ class MusicPartProvider : PartProvider, KoinComponent {
                         ),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    title?.let {
-                        Text(
-                            text = it,
-                            style = MaterialTheme.typography.labelMedium,
-                            maxLines = 1,
-                            overflow = TextOverflow.Ellipsis,
-                            textAlign = TextAlign.Center
-                        )
-                    }
-                    artist?.let {
-                        Text(
-                            text = it,
-                            style = MaterialTheme.typography.bodySmall,
-                            maxLines = 1,
-                            overflow = TextOverflow.Ellipsis,
-                            textAlign = TextAlign.Center
-                        )
+                    // Personal build: music icon + "Title · Artist" on one line, scrolling when it
+                    // doesn't fit (see MODIFICATIONS.md)
+                    val accentSpan = ClockPartText.accentSpan
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                    Icon(
+                        painterResource(if (isMusicPlayer) R.drawable.music_note_24px else R.drawable.play_circle_24px),
+                        contentDescription = null,
+                        modifier = Modifier.padding(end = 6.dp).size(16.dp),
+                    )
+                    Text(
+                        modifier = Modifier
+                            .weight(1f, fill = false)
+                            .basicMarquee(iterations = Int.MAX_VALUE),
+                        text = buildAnnotatedString {
+                            title?.let { append(it) }
+                            artist?.let {
+                                withStyle(accentSpan) {
+                                    if (title != null) append(" · ")
+                                    append(it)
+                                }
+                            }
+                        },
+                        style = ClockPartText.main,
+                        maxLines = 1,
+                        textAlign = TextAlign.Center
+                    )
                     }
                 }
                 CompositionLocalProvider(
