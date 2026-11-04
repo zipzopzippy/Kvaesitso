@@ -145,7 +145,10 @@ internal class AppShortcutRepositoryImpl(
                     score
                 )
             }.toImmutableList()
-            filtered
+            val deviceSettings = if (settings.enabled.first()) {
+                searchDeviceSettings(context, normalizedQuery, stringNormalizer)
+            } else emptyList()
+            (filtered + deviceSettings).toImmutableList()
         }.flowOn(Dispatchers.Default)
     }
 
