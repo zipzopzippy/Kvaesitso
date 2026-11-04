@@ -85,6 +85,8 @@ internal class AppShortcutRepositoryImpl(
                 launcherApps.getShortcuts(query, user)
             } catch (e: IllegalStateException) {
                 emptyList()
+            } catch (e: SecurityException) {
+                emptyList()
             }
             val appShortcuts = mutableListOf<LauncherShortcut>()
             appShortcuts.addAll(
@@ -228,7 +230,14 @@ internal class AppShortcutRepositoryImpl(
                     LauncherApps.ShortcutQuery.FLAG_MATCH_CACHED or
                     LauncherApps.ShortcutQuery.FLAG_MATCH_PINNED_BY_ANY_LAUNCHER
         )
-        val result = launcherApps.getShortcuts(shortcutQuery, Process.myUserHandle()) ?: emptyList()
+        // Personal build: getShortcuts throws if the launcher (briefly) isn't the default home app
+        val result = try {
+            launcherApps.getShortcuts(shortcutQuery, Process.myUserHandle()) ?: emptyList()
+        } catch (e: SecurityException) {
+            emptyList()
+        } catch (e: IllegalStateException) {
+            emptyList()
+        }
         val normalized = result.mapNotNull {
             if ("${it.`package`}:${it.userHandle.getSerialNumber(context)}" in blocklist) return@mapNotNull null
             NormalizedShortcut(

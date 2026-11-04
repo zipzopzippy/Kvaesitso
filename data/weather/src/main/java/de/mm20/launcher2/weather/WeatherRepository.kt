@@ -244,8 +244,11 @@ class WeatherUpdateWorker(
         val updateInterval = provider.getUpdateInterval()
         val lastUpdate = settingsData.lastUpdate
 
+        // The periodic run comes one interval after the last run started, but the last update was
+        // saved at its end. Without some slack, that run counts as too early and is skipped.
+        val minAge = updateInterval * 9 / 10
         val force = inputData.getBoolean(KeyForce, false)
-        if (!force && lastUpdate + updateInterval > System.currentTimeMillis()) {
+        if (!force && lastUpdate + minAge > System.currentTimeMillis()) {
             Log.d("WeatherUpdateWorker", "No weather update required")
             return Result.failure()
         }
