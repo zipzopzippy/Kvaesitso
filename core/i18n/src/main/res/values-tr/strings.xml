@@ -679,10 +679,6 @@
     <string name="preference_tasks_integration_description">Tasks, ücretsiz ve açık kaynaklı bir yapılacaklar listesi ve hatırlatıcı uygulamasıdır. Yüklüyse, %1$s görevlerinizi Tasks uygulamasından görüntüleyebilir ve arayabilir.</string>
     <string name="preference_tasks_integration_ready">Görevler entegrasyonu tamamen kuruldu ve kullanıma hazır.</string>
     <string name="preference_launch_tasks_app">Tasks uygulamasını aç</string>
-    <string name="preference_breezyweather_integration">Breezy Weather</string>
-    <string name="preference_breezyweather_integration_description">Breezy Weather, ücretsiz ve açık kaynaklı bir hava durumu uygulamasıdır. Yüklüyse, %1$s Breezy Weather\'ı hava durumu verileri için bir veri kaynağı olarak kullanabilir.</string>
-    <string name="preference_breezyweather_integration_instructions">Breezy Weather\'ı hava durumu sağlayıcısı olarak kullanmak için:\n\n1. Breezy Weather &gt; Ayarlar &gt; Araçlar &amp; Canlı duvar kağıdı &gt; Gadgetbridge verisi gönder &gt; %1$s\'i Etkinleştir\'e gidin\n\n2. %1$s\'te, hava durumu sağlayıcısı olarak Breezy Weather\'ı seçin</string>
-    <string name="preference_launch_breezyweather_app">Breezy Weather\'ı aç</string>
     <string name="preference_contacts_call_on_tap">Aramak için dokun</string>
     <string name="preference_contacts_call_on_tap_summary">Bir telefon numarasına dokunduğunuzda onay vermeden bir arama başlatın</string>
     <!-- Used in an info banner if a specific feature requires a Nextcloud account -->

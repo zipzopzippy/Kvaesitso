@@ -10,6 +10,7 @@
     <string name="preference_dock_position_center" translatable="false">Middle of the screen</string>
     <string name="preference_clock_widget_text_shadow" translatable="false">Text shadow</string>
     <string name="preference_clock_widget_text_shadow_summary" translatable="false">Shadow behind the clock digits</string>
+    <string name="missing_permission_breezy_weather" translatable="false">Permission to read Breezy Weather data is required to show its weather</string>
     <string name="preference_clock_widget_weather_pill" translatable="false">Background pill</string>
     <string name="preference_clock_widget_weather_pill_none" translatable="false">No pill</string>
     <string name="preference_clock_widget_weather_pill_light" translatable="false">Light pill</string>

@@ -70,6 +70,7 @@ enum class PermissionGroup {
     ManageProfiles,
     Call,
     LocalNetwork,
+    BreezyWeather,
 }
 
 internal class PermissionsManagerImpl(
@@ -80,6 +81,9 @@ internal class PermissionsManagerImpl(
 
     private val calendarPermissionState = MutableStateFlow(
         checkPermissionOnce(PermissionGroup.Calendar)
+    )
+    private val breezyWeatherPermissionState = MutableStateFlow(
+        checkPermissionOnce(PermissionGroup.BreezyWeather)
     )
     private val tasksPermissionState = MutableStateFlow(
         checkPermissionOnce(PermissionGroup.Tasks)
@@ -114,6 +118,14 @@ internal class PermissionsManagerImpl(
                 ActivityCompat.requestPermissions(
                     context,
                     calendarPermissions,
+                    permissionGroup.ordinal
+                )
+            }
+
+            PermissionGroup.BreezyWeather -> {
+                ActivityCompat.requestPermissions(
+                    context,
+                    breezyWeatherPermissions,
                     permissionGroup.ordinal
                 )
             }
@@ -214,6 +226,10 @@ internal class PermissionsManagerImpl(
                 calendarPermissions.all { context.checkPermission(it) }
             }
 
+            PermissionGroup.BreezyWeather -> {
+                breezyWeatherPermissions.all { context.checkPermission(it) }
+            }
+
             PermissionGroup.Tasks -> {
                 taskPermissions.all { context.checkPermission(it) }
             }
@@ -264,6 +280,7 @@ internal class PermissionsManagerImpl(
     override fun hasPermission(permissionGroup: PermissionGroup): Flow<Boolean> {
         return when (permissionGroup) {
             PermissionGroup.Calendar -> calendarPermissionState
+            PermissionGroup.BreezyWeather -> breezyWeatherPermissionState
             PermissionGroup.Tasks -> tasksPermissionState
             PermissionGroup.Location -> locationPermissionState
             PermissionGroup.Contacts -> contactsPermissionState
@@ -286,6 +303,7 @@ internal class PermissionsManagerImpl(
         val granted = grantResults.all { it == PackageManager.PERMISSION_GRANTED }
         when (permissionGroup) {
             PermissionGroup.Calendar -> calendarPermissionState.value = granted
+            PermissionGroup.BreezyWeather -> breezyWeatherPermissionState.value = granted
             PermissionGroup.Tasks -> tasksPermissionState.value = granted
             PermissionGroup.Location -> locationPermissionState.value = granted
             PermissionGroup.Contacts -> contactsPermissionState.value = granted
@@ -316,6 +334,7 @@ internal class PermissionsManagerImpl(
     companion object {
         private val calendarPermissions = arrayOf(Manifest.permission.READ_CALENDAR)
         private val taskPermissions = arrayOf("org.tasks.permission.READ_TASKS")
+        private val breezyWeatherPermissions = arrayOf("org.breezyweather.READ_PROVIDER")
         private val locationPermissions = arrayOf(
             Manifest.permission.ACCESS_COARSE_LOCATION,
             Manifest.permission.ACCESS_FINE_LOCATION

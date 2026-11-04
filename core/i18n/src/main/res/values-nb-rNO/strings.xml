@@ -729,8 +729,6 @@
     <string name="preference_tasks_integration_description">Tasks er en app med fritt og åpen kildekode for gjøremålslister og påminnelser. %1$s kan vise og søke gjennom oppgavene fra Tasks-appen, hvis den er installert.</string>
     <string name="preference_tasks_integration_ready">Integreringen med Tasks er satt opp og klar for bruk.</string>
     <string name="preference_launch_tasks_app">Åpne Tasks-appen</string>
-    <string name="preference_breezyweather_integration_description">Breezy Weather er en værapp med fritt og åpent kildekode. %1$s kan bruke Breezy Weather som en kilde for værdata, hvis installert.</string>
-    <string name="preference_launch_breezyweather_app">Åpne Breezy Weather</string>
     <string name="preference_smartspacer_enable">Skru på integreringen med Smartspacer</string>
     <string name="preference_launch_smartspacer_app">Åpne Smartspacer</string>
     <string name="preference_feed_integration">Feed</string>
