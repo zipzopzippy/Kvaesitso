@@ -73,6 +73,9 @@ class ClockWidgetVM : ViewModel(), KoinComponent {
         .map { if (it) FavoritesPartProvider() else null }
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(), null)
 
+    val textShadow = settings.textShadow
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(), true)
+
     val useThemeColor = settings.useThemeColor
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(), false)
 
