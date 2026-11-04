@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Personal build addition (see MODIFICATIONS.md): names of searchable system settings pages. -->
+<resources>
+    <string name="device_settings_wifi" translatable="false">Wi-Fi</string>
+    <string name="device_settings_bluetooth" translatable="false">Bluetooth</string>
+    <string name="device_settings_network" translatable="false">Network &amp; internet</string>
+    <string name="device_settings_mobile_network" translatable="false">Mobile network</string>
+    <string name="device_settings_airplane_mode" translatable="false">Airplane mode</string>
+    <string name="device_settings_data_usage" translatable="false">Data usage</string>
+    <string name="device_settings_nfc" translatable="false">NFC</string>
+    <string name="device_settings_vpn" translatable="false">VPN</string>
+    <string name="device_settings_cast" translatable="false">Cast</string>
+    <string name="device_settings_display" translatable="false">Display</string>
+    <string name="device_settings_night_light" translatable="false">Night Light</string>
+    <string name="device_settings_screen_saver" translatable="false">Screen saver</string>
+    <string name="device_settings_sound" translatable="false">Sound &amp; vibration</string>
+    <string name="device_settings_do_not_disturb" translatable="false">Do Not Disturb</string>
+    <string name="device_settings_notifications" translatable="false">Notifications</string>
+    <string name="device_settings_battery" translatable="false">Battery</string>
+    <string name="device_settings_battery_saver" translatable="false">Battery Saver</string>
+    <string name="device_settings_storage" translatable="false">Storage</string>
+    <string name="device_settings_apps" translatable="false">Apps</string>
+    <string name="device_settings_default_apps" translatable="false">Default apps</string>
+    <string name="device_settings_security" translatable="false">Security</string>
+    <string name="device_settings_privacy" translatable="false">Privacy</string>
+    <string name="device_settings_location" translatable="false">Location</string>
+    <string name="device_settings_accessibility" translatable="false">Accessibility</string>
+    <string name="device_settings_accounts" translatable="false">Accounts</string>
+    <string name="device_settings_users" translatable="false">Users</string>
+    <string name="device_settings_date_time" translatable="false">Date &amp; time</string>
+    <string name="device_settings_languages" translatable="false">Languages</string>
+    <string name="device_settings_keyboard" translatable="false">Keyboard</string>
+    <string name="device_settings_printing" translatable="false">Printing</string>
+    <string name="device_settings_developer_options" translatable="false">Developer options</string>
+    <string name="device_settings_about_phone" translatable="false">About phone</string>
+</resources>
