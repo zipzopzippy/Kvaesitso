@@ -90,6 +90,11 @@ the [GNU General Public License v3](LICENSE.txt), which also covers this version
 - **Fix: clock and its parts (date, alarm, music) couldn't be tapped** with the dock pinned above
   the search bar, because the dock's full-screen layer swallowed the taps. The column and the
   dock now share one container that owns the home screen's tap handling.
+- **Performance**: the home screen no longer recomposes on every scroll frame
+  (`ClockAndWidgetsHomeComponent` uses `snapshotFlow`/`derivedStateOf` instead of reading the
+  scroll position in composition); settings flows that were recreated on every recomposition
+  (clock settings in `Clock()`, which recomposes every second/minute, dock rows, fill height) are
+  now remembered; icon cache raised from 200 to 400 entries.
 - Personal strings live in `app/ui/src/main/res/values/strings_personal.xml`, not upstream's
   `strings.xml`, so translations and upstream string changes merge cleanly.
 - **GitHub Actions release workflow** (`.github/workflows/personal-release.yml`): every push to

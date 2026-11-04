@@ -292,9 +292,10 @@ fun Clock(
     val timeFormat = LocalTimeFormat.current
     val context = LocalContext.current
     val clockSettings: ClockWidgetSettings = koinInject()
-    val showSeconds by clockSettings.showSeconds.collectAsState(initial = false)
-    val monospaced by clockSettings.monospaced.collectAsState(initial = false)
-    val useThemeColor by clockSettings.useThemeColor.collectAsState(initial = false)
+    // Personal build: remember the flows, Clock() recomposes every second / minute
+    val showSeconds by remember { clockSettings.showSeconds }.collectAsState(initial = false)
+    val monospaced by remember { clockSettings.monospaced }.collectAsState(initial = false)
+    val useThemeColor by remember { clockSettings.useThemeColor }.collectAsState(initial = false)
 
 
     val isTwentyFourHours = timeFormat.isTwentyFourHours(context)
