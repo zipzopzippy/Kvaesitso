@@ -56,8 +56,6 @@ import de.mm20.launcher2.ui.settings.appshortcuts.AppShortcutsSettingsRoute
 import de.mm20.launcher2.ui.settings.appshortcuts.AppShortcutsSettingsScreen
 import de.mm20.launcher2.ui.settings.backup.BackupSettingsRoute
 import de.mm20.launcher2.ui.settings.backup.BackupSettingsScreen
-import de.mm20.launcher2.ui.settings.breezyweather.BreezyWeatherSettingsRoute
-import de.mm20.launcher2.ui.settings.breezyweather.BreezyWeatherSettingsScreen
 import de.mm20.launcher2.ui.settings.buildinfo.BuildInfoSettingsRoute
 import de.mm20.launcher2.ui.settings.buildinfo.BuildInfoSettingsScreen
 import de.mm20.launcher2.ui.settings.calendarsearch.CalendarProviderSettingsRoute
@@ -282,9 +280,6 @@ class SettingsActivity : BaseActivity() {
             }
             entry<TasksIntegrationSettingsRoute> {
                 TasksIntegrationSettingsScreen()
-            }
-            entry<BreezyWeatherSettingsRoute> {
-                BreezyWeatherSettingsScreen()
             }
             entry<PluginsSettingsRoute> {
                 PluginsSettingsScreen()

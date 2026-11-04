@@ -34,7 +34,13 @@ interface WeatherRepository {
     fun getForecasts(limit: Int? = null): Flow<List<Forecast>>
     fun getDailyForecasts(): Flow<List<DailyForecast>>
 
+    /** The active provider's own summary, re-read whenever new weather data arrives. */
+    fun getSummary(): Flow<WeatherSummary?>
+
     fun deleteForecasts()
+
+    /** Reads new data right away if [providerId] is the active provider. */
+    fun onProviderDataChanged(providerId: String)
 }
 
 internal class WeatherRepositoryImpl(
@@ -49,6 +55,7 @@ internal class WeatherRepositoryImpl(
     private val permissionsManager: PermissionsManager by inject()
 
     private val hasLocationPermission = permissionsManager.hasPermission(PermissionGroup.Location)
+    private val hasBreezyWeatherPermission = permissionsManager.hasPermission(PermissionGroup.BreezyWeather)
 
     override fun getForecasts(limit: Int?): Flow<List<Forecast>> {
         return database.weatherDao().getForecasts(limit ?: 99999)
@@ -63,6 +70,14 @@ internal class WeatherRepositoryImpl(
             }
     }
 
+    @OptIn(ExperimentalCoroutinesApi::class)
+    override fun getSummary(): Flow<WeatherSummary?> {
+        return settings.providerId.flatMapLatest { providerId ->
+            val provider = WeatherProvider.getInstance(providerId)
+            getForecasts(limit = 1).map { provider.getSummary() }
+        }
+    }
+
     override fun searchLocations(query: String): Flow<List<WeatherLocation>> {
         return settings.map {
             val provider = WeatherProvider.getInstance(it.provider)
@@ -75,6 +90,11 @@ internal class WeatherRepositoryImpl(
         scope.launch {
             hasLocationPermission.collectLatest {
                 if (it) requestUpdate()
+            }
+        }
+        scope.launch {
+            hasBreezyWeatherPermission.collectLatest {
+                if (it) onProviderDataChanged(BreezyWeatherProvider.Id)
             }
         }
         scope.launch {
@@ -133,9 +153,16 @@ internal class WeatherRepositoryImpl(
     }
 
 
-    private fun requestUpdate() {
+    override fun onProviderDataChanged(providerId: String) {
+        scope.launch {
+            if (settings.providerId.first() == providerId) requestUpdate(force = true)
+        }
+    }
+
+    private fun requestUpdate(force: Boolean = false) {
         val weatherRequest = OneTimeWorkRequestBuilder<WeatherUpdateWorker>()
             .addTag("weather")
+            .setInputData(workDataOf(WeatherUpdateWorker.KeyForce to force))
             .build()
         WorkManager.getInstance(context).enqueue(weatherRequest)
     }
@@ -217,12 +244,15 @@ class WeatherUpdateWorker(
         val updateInterval = provider.getUpdateInterval()
         val lastUpdate = settingsData.lastUpdate
 
-        if (lastUpdate + updateInterval > System.currentTimeMillis()) {
+        val force = inputData.getBoolean(KeyForce, false)
+        if (!force && lastUpdate + updateInterval > System.currentTimeMillis()) {
             Log.d("WeatherUpdateWorker", "No weather update required")
             return Result.failure()
         }
 
-        val weatherData = if (settingsData.autoLocation) {
+        val weatherData = if (provider.managesLocation) {
+            provider.getWeatherData(WeatherLocation.Managed)
+        } else if (settingsData.autoLocation) {
             val latLon = getLastKnownLocation() ?: settingsData.lastLocation
             if (latLon == null) {
                 Log.e("WeatherUpdateWorker", "Could not get location")
@@ -241,7 +271,9 @@ class WeatherUpdateWorker(
 
         return if (weatherData == null) {
             Log.w("WeatherUpdateWorker", "Weather update failed")
-            Result.retry()
+            // Reading from the provider's app fails until something changes there (permission,
+            // first location), and it announces new data itself. Retrying would only pile up.
+            if (provider.managesLocation) Result.failure() else Result.retry()
         } else {
             Log.i("WeatherUpdateWorker", "Weather update succeeded")
             val in7Days = System.currentTimeMillis() + Duration.ofDays(7).toMillis()
@@ -258,4 +290,8 @@ class WeatherUpdateWorker(
         .firstOrNull()
         .or { locationProvider.lastCachedLocation }
         ?.let { LatLon(it.latitude, it.longitude) }
+
+    companion object {
+        const val KeyForce = "force"
+    }
 }

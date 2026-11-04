@@ -28,6 +28,7 @@ import de.mm20.launcher2.ui.BuildConfig
 import de.mm20.launcher2.ui.R
 import de.mm20.launcher2.ui.common.WeatherLocationSearchDialog
 import de.mm20.launcher2.ui.component.Banner
+import de.mm20.launcher2.ui.component.MissingPermissionBanner
 import de.mm20.launcher2.ui.component.preferences.GuardedPreference
 import de.mm20.launcher2.ui.component.preferences.ListPreference
 import de.mm20.launcher2.ui.component.preferences.Preference
@@ -102,6 +103,16 @@ fun WeatherIntegrationSettingsScreen() {
         item {
             PreferenceCategory(title = stringResource(R.string.preference_category_location)) {
                 if (selectedProviderInfo?.id == BreezyWeatherProvider.Id) {
+                    val hasBreezyPermission by viewModel.hasBreezyWeatherPermission.collectAsState()
+                    if (hasBreezyPermission == false) {
+                        MissingPermissionBanner(
+                            modifier = Modifier.padding(16.dp),
+                            text = stringResource(R.string.missing_permission_breezy_weather),
+                            onClick = {
+                                viewModel.requestBreezyWeatherPermission(context as AppCompatActivity)
+                            },
+                        )
+                    }
                     Preference(
                         title = stringResource(R.string.preference_location),
                         summary = stringResource(R.string.preference_location_breezy),
