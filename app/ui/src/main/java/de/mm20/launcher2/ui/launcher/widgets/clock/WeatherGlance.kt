@@ -141,19 +141,30 @@ private fun IconWithText(text: String, label: String? = null, icon: @Composable 
 }
 
 /**
- * Opens the app registered as the device's weather app, or Breezy Weather.
+ * Opens the device's weather app. If there are several (apps in the weather category, plus Breezy
+ * Weather), the system's app picker asks which one.
+ *
+ * Weather apps only put the weather category on their launcher entry, without the default category
+ * an implicit start needs, so the apps are looked up and then started by their component.
  */
 private fun openWeatherApp(context: Context) {
-    // A selector, so that the system asks if there are several weather apps and no default.
-    val weatherApp = Intent.makeMainSelectorActivity(Intent.ACTION_MAIN, Intent.CATEGORY_APP_WEATHER)
-    val intent = if (context.packageManager.resolveActivity(weatherApp, 0) != null) {
-        weatherApp
-    } else {
-        context.packageManager.getLaunchIntentForPackage("org.breezyweather")
-    } ?: return
+    val pm = context.packageManager
+    val categoryApps = pm.queryIntentActivities(
+        Intent(Intent.ACTION_MAIN).addCategory(Intent.CATEGORY_APP_WEATHER), 0
+    ).map { Intent(Intent.ACTION_MAIN).setClassName(it.activityInfo.packageName, it.activityInfo.name) }
+    val breezy = pm.getLaunchIntentForPackage(BreezyWeatherPackage)
+        ?.takeIf { categoryApps.none { app -> app.component?.packageName == BreezyWeatherPackage } }
+    val apps = categoryApps + listOfNotNull(breezy)
+    val intent = when (apps.size) {
+        0 -> return
+        1 -> apps.first()
+        else -> Intent.createChooser(apps.first(), null)
+            .putExtra(Intent.EXTRA_INITIAL_INTENTS, apps.drop(1).toTypedArray())
+    }
     context.tryStartActivity(intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK))
 }
 
+private const val BreezyWeatherPackage = "org.breezyweather"
 private val IconSize = 16.dp
 private val WeatherIconFullSize = 24.dp
 private const val PrecipitationWindowMillis = 12 * 60 * 60 * 1000L
