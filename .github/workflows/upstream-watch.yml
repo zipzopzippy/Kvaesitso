@@ -1,0 +1,87 @@
+# Watches the parent (upstream) repository of this fork and opens/updates an
+# issue in this repo whenever upstream's default branch has commits this fork's
+# `main` branch doesn't have yet.
+# When `main` catches up (e.g. via "Sync fork"), the issue is closed.
+
+name: Upstream update watch
+
+on:
+  schedule:
+    - cron: "0 9 * * *" # every day at 9am
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  issues: write
+
+concurrency:
+  group: upstream-watch
+  cancel-in-progress: false
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    env:
+      GH_TOKEN: ${{ github.token }}
+      GH_REPO: ${{ github.repository }}
+      LABEL: upstream-update
+      FORK_BRANCH: main
+    steps:
+      - name: Check upstream for new commits
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          parent=$(gh api "repos/$GH_REPO" --jq '.parent.full_name // empty')
+          if [ -z "$parent" ]; then
+            echo "This repository is not a fork; nothing to watch."
+            exit 0
+          fi
+          fork_branch=$FORK_BRANCH
+          up_branch=$(gh api "repos/$parent" --jq '.default_branch')
+          fork_owner=${GH_REPO%%/*}
+          up_owner=${parent%%/*}
+
+          # Commits on upstream's default branch that the fork's FORK_BRANCH lacks.
+          compare=$(gh api "repos/$parent/compare/${fork_owner}:${fork_branch}...${up_owner}:${up_branch}")
+          behind=$(jq -r '.ahead_by' <<<"$compare")
+          up_sha=$(gh api "repos/$parent/commits/$up_branch" --jq '.sha')
+          echo "Upstream $parent@$up_branch is ${behind} commit(s) ahead of $GH_REPO@$fork_branch (upstream head $up_sha)"
+
+          gh label create "$LABEL" --color 0E8A16 \
+            --description "Upstream has new commits" --force >/dev/null
+
+          issue=$(gh issue list --label "$LABEL" --state open --limit 1 \
+            --json number --jq '.[0].number // empty')
+
+          if [ "$behind" = "0" ]; then
+            if [ -n "$issue" ]; then
+              gh issue close "$issue" --comment "Fork is up to date with \`$parent@$up_branch\` ($up_sha). Closing."
+            fi
+            exit 0
+          fi
+
+          # Newest-first list of the upstream commits we're missing (compare API caps at 250).
+          commits=$(jq -r --arg repo "$parent" '
+            .commits | reverse | .[:30][] |
+            "- [`\(.sha[0:7])`](https://github.com/\($repo)/commit/\(.sha)) \(.commit.message | split("\n")[0]) — \(.commit.author.name)"
+          ' <<<"$compare")
+          compare_url="https://github.com/$GH_REPO/compare/${fork_branch}...${up_owner}:${up_branch}"
+          marker="<!-- upstream-sha: $up_sha -->"
+          summary=$(printf '%s\n\n**%s** new commit(s) on [`%s@%s`](https://github.com/%s/tree/%s) that `%s` does not have.\n\nLatest commits:\n%s\n\n[View full comparison](%s)' \
+            "$marker" "$behind" "$parent" "$up_branch" "$parent" "$up_branch" "$fork_branch" "$commits" "$compare_url")
+
+          if [ -z "$issue" ]; then
+            gh issue create --title "Upstream update available from $parent" \
+              --label "$LABEL" --body "$summary"
+            exit 0
+          fi
+
+          # Only notify again if upstream moved since the last notification.
+          last_sha=$(gh issue view "$issue" --json body,comments \
+            --jq '[.body, (.comments[].body)] | map(capture("upstream-sha: (?<s>[0-9a-f]+)").s? // empty) | last // ""')
+          if [ "$last_sha" = "$up_sha" ]; then
+            echo "Already notified about $up_sha."
+            exit 0
+          fi
+          gh issue comment "$issue" --body "$summary"
