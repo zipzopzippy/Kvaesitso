@@ -43,10 +43,11 @@ the [GNU General Public License v3](LICENSE.txt), which also covers this version
 - **Fix: crash after opening Settings > Search > App shortcuts.** Upstream's
   `AppShortcutsSettingsRoute` was missing `@Serializable`, so saving the settings screen's state
   crashed whenever that page had been opened.
-- **Clock theme colour in dark mode**: with dark clock colours, "Use theme colors" now uses the
-  theme colour at tone 30 (dark navy for a blue theme) in dark mode too (upstream used
-  `primaryContainer`, which barely differed from the default clock colour). One line in
-  each of the Analog, Binary, Digital 1/2 and Segment clocks.
+- **Fixed clock tones**: with "Use theme colors", the clock, the text below it and the pills use
+  the theme colour at two fixed tones, 90 for light and 25 for dark (`ClockLightTone` /
+  `ClockDarkTone` in `ClockPill.kt`), the same in system light and dark mode. Upstream picked
+  different colour roles per system theme (e.g. `primaryContainer`, which barely differed from the
+  default clock colour). One line in each of the Analog, Binary, Digital 1/2 and Segment clocks.
 - **More currencies**: the ECB only publishes ~30 exchange rates, so the rest (e.g. TWD) are
   fetched from open.er-api.com (free, no key) when currency conversion is on. ECB rates always
   take priority. New file `data/currencies/.../SupplementaryExchangeRates.kt`, one line in
@@ -57,12 +58,12 @@ the [GNU General Public License v3](LICENSE.txt), which also covers this version
   shadowed.
 - **Weather below the clock** (clock widget settings, on by default): Pixel "At a Glance" style
   line from the active weather provider, vertical clock layout only (see "Weather line from the
-  provider's summary" below, `WeatherGlance.kt`). Tapping it opens the weather app (the device's weather app, else
-  Breezy Weather).
+  provider's summary" below, `WeatherGlance.kt`). Tapping it opens the weather app (the
+  system app picker if there are several weather apps, Breezy Weather included).
 - **Background pill** (clock widget settings: no pill, light pill, dark pill): puts the weather line
   and the part below the clock (date, alarm, music, battery) on a pill for contrast, in the clock's
-  palette (theme colour tones with "Use theme colors", else black / white) (`ClockPill.kt`). The
-  themed dark pill uses the clock's own colour (tone 30), translucent.
+  palette (the fixed clock tones with "Use theme colors", else black / white) (`ClockPill.kt`),
+  translucent. Both pills are the same size.
 - **Compact clock parts**: in the vertical layout, the date, music, alarm and battery parts use two
   shared styles (`ClockPartText.kt`): a slightly heavier main style and a lighter accent style,
   with less padding. Music shows a small music icon (a play icon for apps that aren't music players) and "Title · Artist" on one line, scrolling

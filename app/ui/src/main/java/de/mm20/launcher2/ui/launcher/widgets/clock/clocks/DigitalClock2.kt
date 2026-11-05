@@ -13,6 +13,8 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import de.mm20.launcher2.ui.ktx.atTone
+import de.mm20.launcher2.ui.launcher.widgets.clock.ClockDarkTone
+import de.mm20.launcher2.ui.launcher.widgets.clock.ClockLightTone
 import de.mm20.launcher2.ui.locals.LocalDarkTheme
 import java.text.SimpleDateFormat
 import java.util.Locale
@@ -30,13 +32,8 @@ fun DigitalClock2(
 
     val verticalLayout = !compact
     val color = if (useThemeColor) {
-        if (!darkColors) {
-            if (LocalDarkTheme.current) MaterialTheme.colorScheme.onPrimaryContainer
-            else MaterialTheme.colorScheme.primaryContainer
-        } else {
-            if (LocalDarkTheme.current) MaterialTheme.colorScheme.primary.atTone(30)
-            else MaterialTheme.colorScheme.primary
-        }
+        // Personal build: fixed tones, the same as the text below the clock (see MODIFICATIONS.md)
+        MaterialTheme.colorScheme.primary.atTone(if (darkColors) ClockDarkTone else ClockLightTone)
     }
     else {
         LocalContentColor.current
