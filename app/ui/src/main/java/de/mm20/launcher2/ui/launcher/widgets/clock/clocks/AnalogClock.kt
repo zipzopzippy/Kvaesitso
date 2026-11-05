@@ -15,6 +15,8 @@ import androidx.compose.ui.graphics.drawscope.rotate
 import androidx.compose.ui.unit.dp
 import de.mm20.launcher2.preferences.ClockWidgetStyle
 import de.mm20.launcher2.ui.ktx.atTone
+import de.mm20.launcher2.ui.launcher.widgets.clock.ClockDarkTone
+import de.mm20.launcher2.ui.launcher.widgets.clock.ClockLightTone
 import de.mm20.launcher2.ui.locals.LocalDarkTheme
 import java.util.Calendar
 
@@ -38,13 +40,8 @@ fun AnalogClock(
     val strokeWidth = if (verticalLayout) 4.dp else 2.dp
 
     val color = if (useThemeColor) {
-        if (!darkColors) {
-            if (LocalDarkTheme.current) MaterialTheme.colorScheme.onPrimaryContainer
-            else MaterialTheme.colorScheme.primaryContainer
-        } else {
-            if (LocalDarkTheme.current) MaterialTheme.colorScheme.primary.atTone(30)
-            else MaterialTheme.colorScheme.primary
-        }
+        // Personal build: fixed tones, the same as the text below the clock (see MODIFICATIONS.md)
+        MaterialTheme.colorScheme.primary.atTone(if (darkColors) ClockDarkTone else ClockLightTone)
     }
     else {
         LocalContentColor.current

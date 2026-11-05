@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBarsPadding
@@ -50,6 +51,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.unit.coerceAtLeast
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -59,6 +61,7 @@ import de.mm20.launcher2.preferences.ClockWidgetWeatherPill
 import de.mm20.launcher2.preferences.ClockWidgetColors
 import de.mm20.launcher2.preferences.ClockWidgetStyle
 import de.mm20.launcher2.preferences.ui.ClockWidgetSettings
+import de.mm20.launcher2.ui.launcher.widgets.clock.parts.ClockPartText
 import de.mm20.launcher2.ui.R
 import de.mm20.launcher2.ui.base.LocalTime
 import de.mm20.launcher2.ui.component.Banner
@@ -108,9 +111,9 @@ fun ClockWidget(
         if (!useThemeColor) {
             if (darkColors) Color.Black else Color.White
         } else if (darkColors) {
-            MaterialTheme.colorScheme.primary.atTone(30)
+            MaterialTheme.colorScheme.primary.atTone(ClockDarkTone)
         } else {
-            MaterialTheme.colorScheme.primary.atTone(99)
+            MaterialTheme.colorScheme.primary.atTone(ClockLightTone)
         }
 
     // Personal build: text shadow + weather line (see MODIFICATIONS.md)
@@ -208,7 +211,16 @@ fun ClockWidget(
                                 }
 
                                 if (partProvider != null) {
-                                    ClockPill(weatherPill, useThemeColor, Modifier.padding(bottom = 8.dp)) { // Personal build
+                                    // Personal build: the parts pad themselves, so the pill pads less to match the weather pill
+                                    ClockPill(
+                                        weatherPill,
+                                        useThemeColor,
+                                        Modifier.padding(bottom = 8.dp),
+                                        contentPadding = PaddingValues(
+                                            horizontal = ClockPillDefaults.HorizontalPadding - ClockPartText.paddingSize,
+                                            vertical = (ClockPillDefaults.VerticalPadding - ClockPartText.paddingSize).coerceAtLeast(0.dp),
+                                        ),
+                                    ) {
                                     DynamicZone(
                                         compact = false,
                                         provider = partProvider,

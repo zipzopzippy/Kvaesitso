@@ -31,5 +31,6 @@ internal object ClockPartText {
         @Composable get() = LocalContentColor.current.let { it.copy(alpha = it.alpha * 0.75f) }
 
     /** Compact padding for a part's tap target, inside the optional pill. */
-    val padding = Modifier.padding(horizontal = 4.dp, vertical = 4.dp)
+    val paddingSize = 4.dp
+    val padding = Modifier.padding(paddingSize)
 }

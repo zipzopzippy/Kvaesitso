@@ -316,9 +316,9 @@ fun WatchFaceSelector(
 
                     CompositionLocalProvider(
                         LocalContentColor provides if (darkColors) {
-                            MaterialTheme.colorScheme.primary.atTone(30)
+                            MaterialTheme.colorScheme.primary.atTone(ClockDarkTone)
                         } else {
-                            MaterialTheme.colorScheme.primary.atTone(99)
+                            MaterialTheme.colorScheme.primary.atTone(ClockLightTone)
                         },
                     ) {
 
