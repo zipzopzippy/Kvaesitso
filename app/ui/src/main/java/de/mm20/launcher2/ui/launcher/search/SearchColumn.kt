@@ -1,5 +1,9 @@
 package de.mm20.launcher2.ui.launcher.search
 
+import android.content.BroadcastReceiver
+import android.content.Context
+import android.content.Intent
+import android.content.IntentFilter
 import androidx.activity.compose.BackHandler
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.animation.AnimatedContent
@@ -16,6 +20,7 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.surfaceColorAtElevation
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.collectAsState
@@ -24,6 +29,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -155,6 +161,24 @@ fun SearchColumn(
                     }
                 }
             }
+        }
+    }
+
+    // Leave the private space tab when the device is locked
+    val currentProfiles by rememberUpdatedState(profiles)
+    val currentProfileStates by rememberUpdatedState(profileStates)
+    DisposableEffect(context) {
+        val receiver = object : BroadcastReceiver() {
+            override fun onReceive(context: Context?, intent: Intent?) {
+                val visibleProfiles = currentProfiles.filter { currentProfileStates[it.type]?.hidden == false }
+                if (visibleProfiles.getOrNull(selectedAppProfileIndex)?.type == Profile.Type.Private) {
+                    selectedAppProfileIndex = visibleProfiles.indexOfFirst { it.type == Profile.Type.Personal }
+                }
+            }
+        }
+        context.registerReceiver(receiver, IntentFilter(Intent.ACTION_SCREEN_OFF))
+        onDispose {
+            context.unregisterReceiver(receiver)
         }
     }
 
