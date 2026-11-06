@@ -1,128 +1,43 @@
 # Modified version
 
-This is a **modified version of Kvaesitso** for personal use. It is not made or endorsed by the
-Kvaesitso developers. The original is at https://github.com/MM2-0/Kvaesitso and is licensed under
-the [GNU General Public License v3](LICENSE.txt), which also covers this version.
+This is a **modified version of Kvaesitso** for personal use. It is not made or endorsed by the Kvaesitso developers. The original is at https://github.com/MM2-0/Kvaesitso and is licensed under the [GNU General Public License v3](LICENSE.txt), which also covers this version.
 
 ## Changes from Kvaesitso
 
-- **Keyboard filter bar moves with the keyboard.** Upstream only enables it once the drawer has fully
-  settled and animates its space on a separate spring, so the search UI jumps when the keyboard
-  opens or closes. Here it follows the keyboard's position every frame (`LauncherScaffold.kt`).
-- **Search bar menu keeps the keyboard open.** Upstream's menu popup takes input focus, so Android
-  drops the keyboard without animating and the search UI jumps. Here the popup isn't focusable
-  (`SearchBarMenu.kt`).
+- **Keyboard filter bar moves with the keyboard.** Upstream only enables it once the drawer has fully settled and animates its space on a separate spring, so the search UI jumps when the keyboard opens or closes. Here it follows the keyboard's position every frame (`LauncherScaffold.kt`).
+- **Search bar menu keeps the keyboard open.** Upstream's menu popup takes input focus, so Android drops the keyboard without animating and the search UI jumps. Here the popup isn't focusable (`SearchBarMenu.kt`).
 - **No help item in the search bar menu** (`SearchBarMenu.kt`).
-- **Plain edit button on the search actions row**, without upstream's floating action button
-  background (`SearchBarActions.kt`).
-- **Filters for disabled search types are hidden** in the filter panel, the keyboard filter bar and
-  the default filter settings (`AvailableSearchFilters.kt`).
+- **Plain edit button on the search actions row**, without upstream's floating action button background (`SearchBarActions.kt`).
+- **Filters for disabled search types are hidden** in the filter panel, the keyboard filter bar and the default filter settings (`AvailableSearchFilters.kt`).
 - **Dock position** setting (Settings > Home screen, below "Dock rows"):
-  - *Middle of the screen* (default): the dock sits below the clock. In clock fill-height mode
-    it is centered vertically.
-  - *Above search bar*: the dock is pinned just above the search bar and home screen widgets
-    scroll above it (`ClockAndWidgetsHomeComponent.kt`).
-- **Themed icons on the home screen only** (Settings > Icons > "Home screen only"): the dock and
-  home screen widgets use themed icons, the app drawer, search and settings don't. `IconService`
-  keeps a second, unthemed provider set; grid/list items on the home page (`LocalScaffoldPage`)
-  request the themed set. Long-press popups of dock icons and the separate widgets page count as
-  "not home" and show unthemed icons.
-- **Discreet profile switcher** (Settings > Search > Apps): the Personal / Work / Private space
-  tabs become small right-aligned icon buttons without labels, and the "Lock" button becomes a
-  lock icon in the same row (`ui/launcher/search/apps/AppResults.kt`).
-- **Back to Personal on device lock**: if the app drawer is on the Private space tab when the
-  screen turns off, it switches back to the Personal tab (`ui/launcher/search/SearchColumn.kt`).
-  Whether the private space itself locks is still up to Android's settings.
-- **No launcher haptics for the notification shade / quick settings gestures**, since the system
-  shade already vibrates (`hapticFeedback = false` on `NotificationsComponent` and
-  `QuickSettingsComponent`; swipe haptics in `LauncherScaffold.kt` now respect that flag).
-- **Device settings in search**: system settings pages (Wi-Fi, Bluetooth, Display, Battery,
-  Developer options, ...) show up in the Shortcuts search results with the Settings app's icon
-  and can be pinned. Added as a new shortcut type in
-  `data/appshortcuts/.../DeviceSettingsShortcut.kt` with its own strings file
-  (`device_settings_strings.xml`); `AppShortcutRepository.search` and the module's DI setup
-  gained a few lines. Pages that don't exist on the device are left out, and turning off the
-  shortcut search turns these off too.
-- **Fix: crash after opening Settings > Search > App shortcuts.** Upstream's
-  `AppShortcutsSettingsRoute` was missing `@Serializable`, so saving the settings screen's state
-  crashed whenever that page had been opened.
-- **Fixed clock tones**: with "Use theme colors", the clock, the text below it and the pills use
-  the theme colour at two fixed tones, 90 for light and 25 for dark (`ClockLightTone` /
-  `ClockDarkTone` in `ClockPill.kt`), the same in system light and dark mode. Upstream picked
-  different colour roles per system theme (e.g. `primaryContainer`, which barely differed from the
-  default clock colour). One line in each of the Analog, Binary, Digital 1/2 and Segment clocks.
-- **More currencies**: the ECB only publishes ~30 exchange rates, so the rest (e.g. TWD) are
-  fetched from open.er-api.com (free, no key) when currency conversion is on. ECB rates always
-  take priority. New file `data/currencies/.../SupplementaryExchangeRates.kt`, one line in
-  `ExchangeRateWorker`. Note: this is one extra daily network request to a third party.
-- **Clock text shadow** (clock widget settings, on by default): the clock digits get a shadowed
-  copy of the typography (`ClockTextShadow.kt`), so every clock style gets the shadow without
-  touching each clock. Dark clock colours get a light glow instead. Text below the clock is not
-  shadowed.
-- **Weather below the clock** (clock widget settings, on by default): Pixel "At a Glance" style
-  line from the active weather provider, vertical clock layout only (see "Weather line from the
-  provider's summary" below, `WeatherGlance.kt`). Tapping it opens the weather app (the
-  system app picker if there are several weather apps, Breezy Weather included).
-- **Background pill** (clock widget settings: no pill, light pill, dark pill): puts the weather line
-  and the part below the clock (date, alarm, music, battery) on a pill for contrast, in the clock's
-  palette (the fixed clock tones with "Use theme colors", else black / white) (`ClockPill.kt`),
-  translucent. Both pills are the same size.
-- **Compact clock parts**: in the vertical layout, the date, music, alarm and battery parts use two
-  shared styles (`ClockPartText.kt`): a slightly heavier main style and a lighter accent style,
-  with less padding. Music shows a small music icon (a play icon for apps that aren't music players) and "Title · Artist" on one line, scrolling
-  (marquee) when it doesn't fit. The date and alarm replace
-  upstream's `TextButton` with a plain clickable row (upstream code left in place, unused).
-- **Plain black / white clock** without "Use theme colors": the clock and its text are black (dark
-  clock colours) or white instead of a dark / light shade of the theme colour, so the toggle makes
-  a visible difference.
-- **No music playback controls** below the clock in the vertical layout; tapping the title still
-  opens the player (`ShowMusicControls` in `MusicPartProvider.kt`).
-- **Music part only shows while playing**: upstream also keeps it up while paused; here a paused
-  player falls back to the next part, e.g. the date (`getRanking` in `MusicPartProvider.kt`).
-- **Media apps are selected by hand**: upstream includes every music player unless you untick it;
-  here only the apps ticked in Media control count, whatever kind of app they are (`MusicService.kt`,
-  `MediaIntegrationSettingsScreenVM.kt`). If several have a session, whichever is playing wins, else
-  the newest.
-- **Breezy Weather through its data sharing provider** instead of upstream's Gadgetbridge broadcast
-  (`BreezyWeatherProvider.kt`), which has no precipitation amounts. It reads the first location in
-  Breezy and needs the "Read Breezy Weather data" permission (requested in the weather settings).
-  Breezy announces new data through its update notifier (enable the launcher for it in Breezy's
-  settings), with an hourly check as a fallback. Upstream's Breezy integration screen and its setup
-  instructions are removed.
-- **Fix: scheduled weather updates being skipped**: a run could count as too early because the last
-  update was saved at the end of the previous run, doubling the update interval (`WeatherRepository.kt`).
-- **Weather line from the provider's summary** (`WeatherGlance.kt`, `WeatherSummary.kt`): current
-  weather, then "Today" and "Tonight". At night: current weather, then "Tonight" and "Tomorrow" (or
-  "Today" before sunrise). Each with the provider's own icon and temperature, not upstream's daily average
-  icon. Only Breezy Weather offers a summary, the line is hidden with other providers.
-- **Rain on the weather line**: a raindrop with the total for the next 12 hours, or a snowflake if any
-  of it is snow, rounded to the nearest mm and hidden below 1 mm (`WeatherGlance.kt`). Can be turned
-  off below the weather switch, which sits with the dynamic zone settings.
-- **Next event under the date**: in the vertical layout, the date part also shows today's next
-  timed event ("Name · 3:00 pm"), or an all-day event ("Name") when no timed event is left. Uses
-  the calendars enabled for search, without tasks (`TodayEvent` in `DatePartProvider.kt`).
+  - *Middle of the screen* (default): the dock sits below the clock. In clock fill-height mode it is centered vertically.
+  - *Above search bar*: the dock is pinned just above the search bar and home screen widgets scroll above it (`ClockAndWidgetsHomeComponent.kt`).
+- **Themed icons on the home screen only** (Settings > Icons > "Home screen only"): the dock and home screen widgets use themed icons, the app drawer, search and settings don't. `IconService` keeps a second, unthemed provider set; grid/list items on the home page (`LocalScaffoldPage`) request the themed set. Long-press popups of dock icons and the separate widgets page count as "not home" and show unthemed icons.
+- **Discreet profile switcher** (Settings > Search > Apps): the Personal / Work / Private space tabs become small right-aligned icon buttons without labels, and the "Lock" button becomes a lock icon in the same row (`ui/launcher/search/apps/AppResults.kt`).
+- **Back to Personal on device lock**: if the app drawer is on the Private space tab when the screen turns off, it switches back to the Personal tab (`ui/launcher/search/SearchColumn.kt`). Whether the private space itself locks is still up to Android's settings.
+- **No launcher haptics for the notification shade / quick settings gestures**, since the system shade already vibrates (`hapticFeedback = false` on `NotificationsComponent` and `QuickSettingsComponent`; swipe haptics in `LauncherScaffold.kt` now respect that flag).
+- **Device settings in search**: system settings pages (Wi-Fi, Bluetooth, Display, Battery, Developer options, ...) show up in the Shortcuts search results with the Settings app's icon and can be pinned. Added as a new shortcut type in `data/appshortcuts/.../DeviceSettingsShortcut.kt` with its own strings file (`device_settings_strings.xml`); `AppShortcutRepository.search` and the module's DI setup gained a few lines. Pages that don't exist on the device are left out, and turning off the shortcut search turns these off too.
+- **Fix: crash after opening Settings > Search > App shortcuts.** Upstream's `AppShortcutsSettingsRoute` was missing `@Serializable`, so saving the settings screen's state crashed whenever that page had been opened.
+- **Fixed clock tones**: with "Use theme colors", the clock, the text below it and the pills use the theme colour at two fixed tones, 90 for light and 25 for dark (`ClockLightTone` / `ClockDarkTone` in `ClockPill.kt`), the same in system light and dark mode. Upstream picked different colour roles per system theme (e.g. `primaryContainer`, which barely differed from the default clock colour). One line in each of the Analog, Binary, Digital 1/2 and Segment clocks.
+- **More currencies**: the ECB only publishes ~30 exchange rates, so the rest (e.g. TWD) are fetched from open.er-api.com (free, no key) when currency conversion is on. ECB rates always take priority. New file `data/currencies/.../SupplementaryExchangeRates.kt`, one line in `ExchangeRateWorker`. Note: this is one extra daily network request to a third party.
+- **Clock text shadow** (clock widget settings, on by default): the clock digits get a shadowed copy of the typography (`ClockTextShadow.kt`), so every clock style gets the shadow without touching each clock. Dark clock colours get a light glow instead. Text below the clock is not shadowed.
+- **Weather below the clock** (clock widget settings, on by default): Pixel "At a Glance" style line from the active weather provider, vertical clock layout only (see "Weather line from the provider's summary" below, `WeatherGlance.kt`). Tapping it opens the weather app (the system app picker if there are several weather apps, Breezy Weather included).
+- **Background pill** (clock widget settings: no pill, light pill, dark pill): puts the weather line and the part below the clock (date, alarm, music, battery) on a pill for contrast, in the clock's palette (the fixed clock tones with "Use theme colors", else black / white) (`ClockPill.kt`), translucent. Both pills are the same size.
+- **Compact clock parts**: in the vertical layout, the date, music, alarm and battery parts use two shared styles (`ClockPartText.kt`): a slightly heavier main style and a lighter accent style, with less padding. Music shows a small music icon (a play icon for apps that aren't music players) and "Title · Artist" on one line, scrolling (marquee) when it doesn't fit. The alarm shows the alarm time in 12-hour format followed by a lighter "in Nh Mm" countdown (just "in Mm" under an hour). The date and alarm replace upstream's `TextButton` with a plain clickable row (upstream code left in place, unused).
+- **Plain black / white clock** without "Use theme colors": the clock and its text are black (dark clock colours) or white instead of a dark / light shade of the theme colour, so the toggle makes a visible difference.
+- **No music playback controls** below the clock in the vertical layout; tapping the title still opens the player (`ShowMusicControls` in `MusicPartProvider.kt`).
+- **Music part only shows while playing**: upstream also keeps it up while paused; here a paused player falls back to the next part, e.g. the date (`getRanking` in `MusicPartProvider.kt`).
+- **Media apps are selected by hand**: upstream includes every music player unless you untick it; here only the apps ticked in Media control count, whatever kind of app they are (`MusicService.kt`, `MediaIntegrationSettingsScreenVM.kt`). If several have a session, whichever is playing wins, else the newest.
+- **Breezy Weather through its data sharing provider** instead of upstream's Gadgetbridge broadcast (`BreezyWeatherProvider.kt`), which has no precipitation amounts. It reads the first location in Breezy and needs the "Read Breezy Weather data" permission (requested in the weather settings). Breezy announces new data through its update notifier (enable the launcher for it in Breezy's settings), with an hourly check as a fallback. Upstream's Breezy integration screen and its setup instructions are removed.
+- **Fix: scheduled weather updates being skipped**: a run could count as too early because the last update was saved at the end of the previous run, doubling the update interval (`WeatherRepository.kt`).
+- **Weather line from the provider's summary** (`WeatherGlance.kt`, `WeatherSummary.kt`): current weather, then "Today" and "Tonight". At night: current weather, then "Tonight" and "Tomorrow" (or "Today" before sunrise). Each with the provider's own icon and temperature, not upstream's daily average icon. Only Breezy Weather offers a summary, the line is hidden with other providers.
+- **Rain on the weather line**: a raindrop with the total for the next 12 hours, or a snowflake if any of it is snow, rounded to the nearest mm and hidden below 1 mm (`WeatherGlance.kt`). Can be turned off below the weather switch, which sits with the dynamic zone settings.
+- **Next event under the date**: in the vertical layout, the date part also shows today's next timed event ("Name · 3:00 pm"), or an all-day event ("Name") when no timed event is left. Uses the calendars enabled for search, without tasks (`TodayEvent` in `DatePartProvider.kt`).
 - **Tapping the battery part** under the clock opens the battery settings.
-- **Fix: clock and its parts (date, alarm, music) couldn't be tapped** with the dock pinned above
-  the search bar, because the dock's full-screen layer swallowed the taps. The column and the
-  dock now share one container that owns the home screen's tap handling.
-- **Performance**: the home screen no longer recomposes on every scroll frame
-  (`ClockAndWidgetsHomeComponent` uses `snapshotFlow`/`derivedStateOf` instead of reading the
-  scroll position in composition); settings flows that were recreated on every recomposition
-  (clock settings in `Clock()`, which recomposes every second/minute, dock rows, fill height) are
-  now remembered; icon cache raised from 200 to 400 entries.
-- **Fix: crashes when the launcher isn't the default home app.** `LauncherApps.getShortcuts` throws
-  `SecurityException` then; the shortcut search and shortcut favorites now handle it.
-- Personal strings live in `app/ui/src/main/res/values/strings_personal.xml`, not upstream's
-  `strings.xml`, so translations and upstream string changes merge cleanly.
-- **GitHub Actions release workflow** (`.github/workflows/personal-release.yml`): every push to
-  `personal` builds `assemblePersonalRelease` and publishes it as a release numbered
-  incrementally (`personal-004`, version `1.41.0-personal.004`), with the commit subjects since
-  the previous release as notes. Local builds use the commit (`-personal-<commit>`) instead. Needs the repository secret `DEBUG_KEYSTORE`
-  (base64 of the PC's `~/.android/debug.keystore`) so builds keep updating existing installs.
-- **Permissions after restoring a backup**: the "Restored" screen lists the permissions the main
-  features need that aren't granted yet (default launcher / app shortcuts, notification access,
-  contacts, calendar, location, files, work profile / private space), each with a Grant button
-  (`ui/common/RestoredPermissions.kt`, a few lines in `RestoreBackupSheet.kt`, which now scrolls).
-- A `personal` build flavor (`assemblePersonalRelease`): app ID `de.mm20.launcher2.personal`,
-  named "Kvaesitso Personal", version suffix `-personal-<commit>`. Installs next to the official
-  app. Release builds are signed with the local debug key.
+- **Fix: clock and its parts (date, alarm, music) couldn't be tapped** with the dock pinned above the search bar, because the dock's full-screen layer swallowed the taps. The column and the dock now share one container that owns the home screen's tap handling.
+- **Performance**: the home screen no longer recomposes on every scroll frame (`ClockAndWidgetsHomeComponent` uses `snapshotFlow`/`derivedStateOf` instead of reading the scroll position in composition); settings flows that were recreated on every recomposition (clock settings in `Clock()`, which recomposes every second/minute, dock rows, fill height) are now remembered; icon cache raised from 200 to 400 entries.
+- **Fix: crashes when the launcher isn't the default home app.** `LauncherApps.getShortcuts` throws `SecurityException` then; the shortcut search and shortcut favorites now handle it.
+- Personal strings live in `app/ui/src/main/res/values/strings_personal.xml`, not upstream's `strings.xml`, so translations and upstream string changes merge cleanly.
+- **GitHub Actions release workflow** (`.github/workflows/personal-release.yml`): every push to `personal` builds `assemblePersonalRelease` and publishes it as a release numbered incrementally (`personal-004`, version `1.41.0-personal.004`), with the commit subjects since the previous release as notes. Local builds use the commit (`-personal-<commit>`) instead. Needs the repository secret `DEBUG_KEYSTORE` (base64 of the PC's `~/.android/debug.keystore`) so builds keep updating existing installs.
+- **Permissions after restoring a backup**: the "Restored" screen lists the permissions the main features need that aren't granted yet (default launcher / app shortcuts, notification access, contacts, calendar, location, files, work profile / private space), each with a Grant button (`ui/common/RestoredPermissions.kt`, a few lines in `RestoreBackupSheet.kt`, which now scrolls).
+- A `personal` build flavor (`assemblePersonalRelease`): app ID `de.mm20.launcher2.personal`, named "Kvaesitso Personal", version suffix `-personal-<commit>`. Installs next to the official app. Release builds are signed with the local debug key.
