@@ -16,6 +16,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.withStyle
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -94,9 +100,22 @@ class AlarmPartProvider : PartProvider {
                         contentDescription = null,
                         modifier = Modifier.size(18.dp),
                     )
+                    val accentSpan = ClockPartText.accentSpan
+                    val alarmTimeText = remember(it) {
+                        SimpleDateFormat("h:mm a", Locale.getDefault()).format(Date(it))
+                    }
+                    // Round up so an alarm 59s away reads "in 1m", not "in 0m"
+                    val minutesLeft = ((it - time).coerceAtLeast(0) + 59_999) / 60_000
+                    val hours = minutesLeft / 60
+                    val minutes = minutesLeft % 60
                     Text(
                         modifier = Modifier.padding(start = 8.dp),
-                        text = DateUtils.getRelativeTimeSpanString(it, time, DateUtils.MINUTE_IN_MILLIS).toString(),
+                        text = buildAnnotatedString {
+                            append(alarmTimeText)
+                            withStyle(accentSpan) {
+                                append(if (hours > 0) " in ${hours}h ${minutes}m" else " in ${minutes}m")
+                            }
+                        },
                         style = ClockPartText.main,
                     )
                 }
