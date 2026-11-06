@@ -30,6 +30,9 @@ the [GNU General Public License v3](LICENSE.txt), which also covers this version
 - **Discreet profile switcher** (Settings > Search > Apps): the Personal / Work / Private space
   tabs become small right-aligned icon buttons without labels, and the "Lock" button becomes a
   lock icon in the same row (`ui/launcher/search/apps/AppResults.kt`).
+- **Back to Personal on device lock**: if the app drawer is on the Private space tab when the
+  screen turns off, it switches back to the Personal tab (`ui/launcher/search/SearchColumn.kt`).
+  Whether the private space itself locks is still up to Android's settings.
 - **No launcher haptics for the notification shade / quick settings gestures**, since the system
   shade already vibrates (`hapticFeedback = false` on `NotificationsComponent` and
   `QuickSettingsComponent`; swipe haptics in `LauncherScaffold.kt` now respect that flag).
