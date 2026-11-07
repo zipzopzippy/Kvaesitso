@@ -87,6 +87,18 @@ interface SavableSearchableRepository : Backupable {
         limit: Int = 9999,
     ): Flow<List<SavableSearchable>>
 
+    /**
+     * Personal build: frequently used items, without the items in [excludeKeys] and without the
+     * apps and shortcuts of the user [excludeUserSerial] (see MODIFICATIONS.md)
+     */
+    fun getFrequentlyUsed(
+        excludeTypes: List<String>?,
+        excludeKeys: Set<String>,
+        excludeUserSerial: Long?,
+        minVisibility: VisibilityLevel,
+        limit: Int,
+    ): Flow<List<SavableSearchable>>
+
     fun getKeys(
         includeTypes: List<String>? = null,
         excludeTypes: List<String>? = null,
@@ -272,6 +284,25 @@ internal class SavableSearchableRepositoryImpl(
         }
 
         return entities.map {
+            it.mapNotNull { fromDatabaseEntity(it).searchable }
+        }
+    }
+
+    override fun getFrequentlyUsed(
+        excludeTypes: List<String>?,
+        excludeKeys: Set<String>,
+        excludeUserSerial: Long?,
+        minVisibility: VisibilityLevel,
+        limit: Int
+    ): Flow<List<SavableSearchable>> {
+        return database.searchableDao().getFrequentlyUsed(
+            excludeTypes = excludeTypes ?: emptyList(),
+            excludeKeys = excludeKeys.toList(),
+            // Apps and shortcuts of other profiles have keys ending with ":<user serial>"
+            excludeKeySuffix = excludeUserSerial?.let { ":$it" },
+            minVisibility = minVisibility.value,
+            limit = limit,
+        ).map {
             it.mapNotNull { fromDatabaseEntity(it).searchable }
         }
     }
