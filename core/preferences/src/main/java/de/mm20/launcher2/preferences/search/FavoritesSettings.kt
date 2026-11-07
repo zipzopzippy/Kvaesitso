@@ -42,6 +42,24 @@ class FavoritesSettings internal constructor(
         dataStore.update { it.copy(favoritesFrequentlyUsedRows = frequentlyUsedRows) }
     }
 
+    /**
+     * Keys of the apps that must not be suggested as frequently used
+     */
+    val frequentlyUsedExcluded: Flow<Set<String>>
+        get() = dataStore.data.map { it.favoritesFrequentlyUsedExcluded }.distinctUntilChanged()
+
+    fun setFrequentlyUsedExcluded(key: String, excluded: Boolean) {
+        dataStore.update {
+            it.copy(
+                favoritesFrequentlyUsedExcluded = if (excluded) {
+                    it.favoritesFrequentlyUsedExcluded + key
+                } else {
+                    it.favoritesFrequentlyUsedExcluded - key
+                }
+            )
+        }
+    }
+
     val compactTags: Flow<Boolean>
         get() = dataStore.data.map { it.favoritesCompactTags }.distinctUntilChanged()
 

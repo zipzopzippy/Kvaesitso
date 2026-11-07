@@ -8,8 +8,10 @@
     <string name="preference_clock_widget_fill_height_summary" translatable="false">Clock fills the first screen, widgets start below it</string>
     <string name="preference_clock_widget_fill_height_summary_no_widgets" translatable="false">Always on without home screen widgets</string>
     <string name="preference_dock_position" translatable="false">Dock position</string>
-    <string name="preference_dock_position_bottom" translatable="false">Above search bar</string>
-    <string name="preference_dock_position_center" translatable="false">Middle of the screen</string>
+    <string name="preference_dock_position_bottom" translatable="false">Bottom</string>
+    <string name="preference_dock_position_center" translatable="false">Middle</string>
+    <string name="preference_frequently_used_apps" translatable="false">Frequently used apps</string>
+    <string name="preference_frequently_used_apps_summary" translatable="false">Untick an app to stop it being suggested</string>
     <string name="preference_clock_widget_text_shadow" translatable="false">Text shadow</string>
     <string name="preference_clock_widget_text_shadow_summary" translatable="false">Shadow behind the clock digits</string>
     <string name="preference_clock_widget_weather" translatable="false">Weather</string>

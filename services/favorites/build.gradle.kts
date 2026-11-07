@@ -47,6 +47,8 @@ dependencies {
 
     implementation(project(":core:base"))
     implementation(project(":core:i18n"))
+    implementation(project(":core:preferences"))
+    implementation(project(":core:profiles"))
     implementation(project(":data:searchable"))
 
 }

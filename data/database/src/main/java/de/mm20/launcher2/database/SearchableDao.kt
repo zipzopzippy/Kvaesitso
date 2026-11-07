@@ -94,6 +94,28 @@ interface SearchableDao {
         limit: Int,
     ): Flow<List<SavedSearchableEntity>>
 
+    /**
+     * Personal build: frequently used items, without [excludeKeys] and without the apps and
+     * shortcuts whose key ends with [excludeKeySuffix] (see MODIFICATIONS.md)
+     */
+    @Query(
+        "SELECT * FROM Searchable " +
+                "WHERE pinPosition = 0 AND launchCount > 0 " +
+                "AND `type` NOT IN (:excludeTypes) AND `key` NOT IN (:excludeKeys) " +
+                "AND NOT (:excludeKeySuffix IS NOT NULL AND `type` IN ('app', 'shortcut') " +
+                "AND `key` LIKE '%' || :excludeKeySuffix) " +
+                "AND (hidden <= :minVisibility AND hidden >= :maxVisibility) " +
+                "ORDER BY weight DESC, launchCount DESC LIMIT :limit"
+    )
+    fun getFrequentlyUsed(
+        excludeTypes: List<String>,
+        excludeKeys: List<String>,
+        excludeKeySuffix: String?,
+        minVisibility: Int,
+        maxVisibility: Int = 0,
+        limit: Int,
+    ): Flow<List<SavedSearchableEntity>>
+
     @Query(
         "SELECT `key` FROM Searchable " +
                 "WHERE (" +
