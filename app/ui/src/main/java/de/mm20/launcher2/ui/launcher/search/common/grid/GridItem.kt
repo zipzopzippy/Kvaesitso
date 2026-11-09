@@ -48,6 +48,8 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.IntRect
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.roundToIntRect
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.compose.LifecycleEventEffect
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import de.mm20.launcher2.search.AppShortcut
 import de.mm20.launcher2.search.Application
@@ -236,6 +238,9 @@ fun ItemPopup(origin: IntRect, searchable: Searchable, onDismissRequest: () -> U
     }
     BackHandler {
         show.targetState = false
+    }
+    LifecycleEventEffect(Lifecycle.Event.ON_STOP) {
+        onDismissRequest()
     }
 
     Overlay {
