@@ -2,6 +2,19 @@ package de.mm20.launcher2.ui.launcher.widgets.clock
 
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.ExitTransition
+import androidx.compose.animation.SizeTransform
+import androidx.compose.animation.animateContentSize
+import androidx.compose.animation.core.MutableTransitionState
+import androidx.compose.animation.core.Spring
+import androidx.compose.animation.core.snap
+import androidx.compose.animation.core.spring
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.expandVertically
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.shrinkVertically
+import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -52,6 +65,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.coerceAtLeast
+import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -130,9 +144,18 @@ fun ClockWidget(
         viewModel.updateTime(time)
     }
 
-    val partProvider by remember { viewModel.getActivePart(context) }.collectAsStateWithLifecycle(
-        null
-    )
+    val partProvider by remember { viewModel.getActivePart(context) }.collectAsStateWithLifecycle()
+    val weatherSummary by viewModel.weatherSummary.collectAsStateWithLifecycle()
+    val weatherForecasts by viewModel.weatherForecasts.collectAsStateWithLifecycle()
+
+    // Personal build: the clock fades in once its settings have loaded (slow right after boot).
+    // Remembered out here, so that it only fades on a cold start, not when leaving edit mode.
+    val clockVisible = remember { MutableTransitionState(clockStyle != null && compact != null) }
+    clockVisible.targetState = clockStyle != null && compact != null
+
+    // Personal build: the last part stays on screen while the dynamic zone animates out
+    var shownPartProvider by remember { mutableStateOf(partProvider) }
+    if (partProvider != null && partProvider != shownPartProvider) shownPartProvider = partProvider
 
     AnimatedContent(editMode, label = "ClockWidget") {
         if (it) {
@@ -194,23 +217,42 @@ fun ClockWidget(
                             Column(
                                 horizontalAlignment = Alignment.CenterHorizontally,
                             ) {
-                                Box(
-                                    modifier = Modifier.clickable(
-                                        enabled = clockStyle !is ClockWidgetStyle.Empty,
-                                        indication = null,
-                                        interactionSource = remember { MutableInteractionSource() }
-                                    ) {
-                                        viewModel.launchClockApp(context)
-                                    }
+                                AnimatedVisibility(
+                                    visibleState = clockVisible,
+                                    enter = ClockEnterTransition,
+                                    exit = ExitTransition.None,
                                 ) {
-                                    MaterialTheme(typography = clockTypography) { Clock(clockStyle, false, darkColors) }
+                                    Box(
+                                        modifier = Modifier.clickable(
+                                            enabled = clockStyle !is ClockWidgetStyle.Empty,
+                                            indication = null,
+                                            interactionSource = remember { MutableInteractionSource() }
+                                        ) {
+                                            viewModel.launchClockApp(context)
+                                        }
+                                    ) {
+                                        MaterialTheme(typography = clockTypography) { Clock(clockStyle, false, darkColors) }
+                                    }
                                 }
 
                                 if (showWeather) {
-                                    WeatherGlance(time = time - time % 60_000L, showPrecipitation = weatherPrecipitation, modifier = Modifier.padding(bottom = 8.dp), pill = weatherPill, themed = useThemeColor)
+                                    WeatherGlance(
+                                        summary = weatherSummary,
+                                        hours = weatherForecasts,
+                                        time = time - time % 60_000L,
+                                        showPrecipitation = weatherPrecipitation,
+                                        modifier = Modifier.padding(bottom = 8.dp),
+                                        pill = weatherPill,
+                                        themed = useThemeColor,
+                                    )
                                 }
 
-                                if (partProvider != null) {
+                                // Personal build: slides in / out like the weather line
+                                AnimatedVisibility(
+                                    visible = partProvider != null,
+                                    enter = ClockLineEnterTransition,
+                                    exit = ClockLineExitTransition,
+                                ) {
                                     // Personal build: the parts pad themselves, so the pill pads less to match the weather pill
                                     ClockPill(
                                         weatherPill,
@@ -221,10 +263,10 @@ fun ClockWidget(
                                             vertical = (ClockPillDefaults.VerticalPadding - ClockPartText.paddingSize).coerceAtLeast(0.dp),
                                         ),
                                     ) {
-                                    DynamicZone(
-                                        compact = false,
-                                        provider = partProvider,
-                                    )
+                                        DynamicZone(
+                                            compact = false,
+                                            provider = shownPartProvider,
+                                        )
                                     }
                                 }
                             }
@@ -255,16 +297,22 @@ fun ClockWidget(
                                             ),
                                     )
                                 }
-                                Box(
-                                    modifier = Modifier.clickable(
-                                        enabled = clockStyle !is ClockWidgetStyle.Empty,
-                                        indication = null,
-                                        interactionSource = remember { MutableInteractionSource() }
-                                    ) {
-                                        viewModel.launchClockApp(context)
-                                    }
+                                AnimatedVisibility(
+                                    visibleState = clockVisible,
+                                    enter = ClockEnterTransition,
+                                    exit = ExitTransition.None,
                                 ) {
-                                    MaterialTheme(typography = clockTypography) { Clock(clockStyle, true, darkColors) }
+                                    Box(
+                                        modifier = Modifier.clickable(
+                                            enabled = clockStyle !is ClockWidgetStyle.Empty,
+                                            indication = null,
+                                            interactionSource = remember { MutableInteractionSource() }
+                                        ) {
+                                            viewModel.launchClockApp(context)
+                                        }
+                                    ) {
+                                        MaterialTheme(typography = clockTypography) { Clock(clockStyle, true, darkColors) }
+                                    }
                                 }
                             }
                         }
@@ -383,12 +431,42 @@ fun DynamicZone(
     compact: Boolean,
     provider: PartProvider?,
 ) {
-    Column(
-        modifier = modifier
-    ) {
-        provider?.Component(compact)
+    // Personal build: when the part changes (e.g. music starts), the old one fades out quickly
+    // and the new one fades in while the zone (and its pill) resizes. Size changes within a part
+    // (a longer title, the alarm countdown) animate too.
+    AnimatedContent(
+        targetState = provider,
+        modifier = modifier.animateContentSize(DynamicZoneSizeSpec),
+        contentAlignment = if (compact) Alignment.CenterStart else Alignment.Center,
+        // The providers are recreated when the home screen comes back, don't fade between equals
+        contentKey = { it?.let { part -> part::class } },
+        transitionSpec = {
+            (fadeIn(tween(durationMillis = 150, delayMillis = 60)) togetherWith fadeOut(tween(durationMillis = 90)))
+                // The size is animated by animateContentSize above, which also clips the old part
+                .using(SizeTransform(clip = false) { _, _ -> snap() })
+        },
+        label = "DynamicZone",
+    ) { part ->
+        Column {
+            part?.Component(compact)
+        }
     }
 }
+
+private val DynamicZoneSizeSpec = spring<IntSize>(
+    dampingRatio = Spring.DampingRatioNoBouncy,
+    stiffness = Spring.StiffnessMedium,
+)
+
+private val ClockEnterTransition = fadeIn(tween(durationMillis = 250))
+
+/** Personal build: the weather line and the dynamic zone slide in when they finish loading. */
+internal val ClockLineEnterTransition =
+    fadeIn(tween(durationMillis = 200, delayMillis = 80)) +
+        expandVertically(spring(stiffness = Spring.StiffnessMediumLow), expandFrom = Alignment.Top)
+internal val ClockLineExitTransition =
+    fadeOut(tween(durationMillis = 120)) +
+        shrinkVertically(spring(stiffness = Spring.StiffnessMediumLow), shrinkTowards = Alignment.Top)
 
 @Composable
 fun ConfigureClockWidgetSheet(

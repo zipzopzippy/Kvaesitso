@@ -3,6 +3,7 @@ package de.mm20.launcher2.ui.launcher.widgets.clock
 import android.content.Context
 import android.content.Intent
 import androidx.annotation.StringRes
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -13,9 +14,10 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
@@ -34,9 +36,7 @@ import de.mm20.launcher2.ui.locals.LocalMeasurementSystem
 import de.mm20.launcher2.ui.utils.formatPrecipitation
 import de.mm20.launcher2.ui.utils.formatTemperature
 import de.mm20.launcher2.weather.Forecast
-import de.mm20.launcher2.weather.WeatherRepository
 import de.mm20.launcher2.weather.WeatherSummary
-import org.koin.compose.koinInject
 import java.util.Calendar
 import kotlin.math.roundToInt
 
@@ -53,6 +53,8 @@ import kotlin.math.roundToInt
  */
 @Composable
 fun WeatherGlance(
+    summary: WeatherSummary?,
+    hours: List<Forecast>,
     /** The current time, rounded to the minute so that this doesn't rerun on every clock tick. */
     time: Long,
     showPrecipitation: Boolean,
@@ -60,13 +62,30 @@ fun WeatherGlance(
     pill: ClockWidgetWeatherPill = ClockWidgetWeatherPill.None,
     themed: Boolean = false,
 ) {
-    val weatherRepository: WeatherRepository = koinInject()
-    val summary by remember { weatherRepository.getSummary() }.collectAsState(null)
-    val hours by remember { weatherRepository.getForecasts() }.collectAsState(emptyList())
     val glance = remember(summary, hours, time) {
         summary?.let { glanceFor(it, hours, time) }
-    } ?: return
+    }
+    // Personal build: slides in (pushing the clock / dynamic zone aside) when the weather loads,
+    // which can take a while right after boot. The last glance stays on screen while it slides out.
+    var shownGlance by remember { mutableStateOf(glance) }
+    if (glance != null && glance != shownGlance) shownGlance = glance
+    AnimatedVisibility(
+        visible = glance != null,
+        enter = ClockLineEnterTransition,
+        exit = ClockLineExitTransition,
+    ) {
+        shownGlance?.let { WeatherGlanceContent(it, showPrecipitation, modifier, pill, themed) }
+    }
+}
 
+@Composable
+private fun WeatherGlanceContent(
+    glance: Glance,
+    showPrecipitation: Boolean,
+    modifier: Modifier,
+    pill: ClockWidgetWeatherPill,
+    themed: Boolean,
+) {
     val context = LocalContext.current
     val measurementSystem = LocalMeasurementSystem.current
 
