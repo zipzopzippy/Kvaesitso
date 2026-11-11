@@ -34,4 +34,5 @@
     <string name="preference_clock_widget_weather_pill_none" translatable="false">No pill</string>
     <string name="preference_clock_widget_weather_pill_light" translatable="false">Light pill</string>
     <string name="preference_clock_widget_weather_pill_dark" translatable="false">Dark pill</string>
+    <string name="hint_search_result_order" translatable="false">Search results appear in this order. Hold and drag to rearrange.</string>
 </resources>
