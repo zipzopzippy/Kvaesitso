@@ -48,8 +48,8 @@ import kotlin.math.roundToInt
  * current weather, then tonight and the next day. The labels use the lighter of the two clock part
  * text styles, the temperatures the heavier one.
  *
- * A raindrop with the total adds up the next 12 hours, if that comes to at least 1 mm. A snowflake
- * replaces the raindrop if any of it is snow.
+ * A raindrop with the total adds up the next 12 hours, if any is expected, shown as "<1 mm" below
+ * 1 mm. A snowflake replaces the raindrop if any of it is snow.
  */
 @Composable
 fun WeatherGlance(
@@ -104,12 +104,13 @@ private fun WeatherGlanceContent(
                 }
             }
             if (showPrecipitation && glance.precipitation != null) {
+                val millimeters = glance.precipitation.millimeters
                 IconWithText(
-                    formatPrecipitation(
-                        context,
-                        glance.precipitation.millimeters.roundToInt().toFloat(),
-                        measurementSystem,
-                    )
+                    if (millimeters < MinPrecipitationMillimeters) {
+                        "<" + formatPrecipitation(context, MinPrecipitationMillimeters.toFloat(), measurementSystem)
+                    } else {
+                        formatPrecipitation(context, millimeters.roundToInt().toFloat(), measurementSystem)
+                    }
                 ) {
                     // The weather icon's palette. These symbols don't fill their box, so only take
                     // up the width of the shape: the gap to the text then looks the same.
@@ -238,12 +239,12 @@ private fun WeatherSummary.Period?.asPeriod(night: Boolean, @StringRes label: In
     return this?.let { GlancePeriod(it.icon, it.temperature, night, label) }
 }
 
-/** The expected total for the next 12 hours (hourly forecasts in mm), if it is worth mentioning. */
+/** The expected total for the next 12 hours (hourly forecasts in mm), if any is expected. */
 private fun upcomingPrecipitation(forecasts: List<Forecast>, now: Long): UpcomingPrecipitation? {
     val hours = forecasts
         .filter { it.timestamp + HourMillis > now && it.timestamp < now + PrecipitationWindowMillis }
     val total = hours.sumOf { it.precipitation ?: 0.0 }
-    if (total < MinPrecipitationMillimeters) return null
+    if (total <= 0.0) return null
     return UpcomingPrecipitation(
         millimeters = total,
         // Not every weather source splits out snow, so also go by the hour's condition.
