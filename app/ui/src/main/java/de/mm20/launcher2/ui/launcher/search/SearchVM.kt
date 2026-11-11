@@ -12,6 +12,7 @@ import de.mm20.launcher2.devicepose.DevicePoseProvider
 import de.mm20.launcher2.ktx.isAtLeastApiLevel
 import de.mm20.launcher2.permissions.PermissionGroup
 import de.mm20.launcher2.permissions.PermissionsManager
+import de.mm20.launcher2.preferences.SearchResultType
 import de.mm20.launcher2.preferences.search.CalendarSearchSettings
 import de.mm20.launcher2.preferences.search.ContactSearchSettings
 import de.mm20.launcher2.preferences.search.FileSearchSettings
@@ -73,6 +74,9 @@ class SearchVM : ViewModel(), KoinComponent {
 
     val launchOnEnter = searchUiSettings.launchOnEnter
         .stateIn(viewModelScope, SharingStarted.Eagerly, false)
+
+    val resultOrder = searchUiSettings.resultOrder
+        .stateIn(viewModelScope, SharingStarted.Eagerly, SearchResultType.entries)
 
     private val searchService: SearchService by inject()
 
@@ -321,18 +325,22 @@ class SearchVM : ViewModel(), KoinComponent {
                         }
 
                         if (launchOnEnter.value) {
-                            bestMatch.value = when {
-                                appResults.isNotEmpty() -> appResults.first()
-                                appShortcutResults.isNotEmpty() -> appShortcutResults.first()
-                                calendarResults.isNotEmpty() -> calendarResults.first()
-                                locationResults.isNotEmpty() -> locationResults.first()
-                                contactResults.isNotEmpty() -> contactResults.first()
-                                articleResults.isNotEmpty() -> articleResults.first()
-                                websiteResults.isNotEmpty() -> websiteResults.first()
-                                fileResults.isNotEmpty() -> fileResults.first()
-                                searchActionResults.isNotEmpty() -> searchActionResults.first()
-                                else -> null
-                            }
+                            // Apps first, then the result sections in the user's order
+                            bestMatch.value = appResults.firstOrNull()
+                                ?: resultOrder.value.firstNotNullOfOrNull {
+                                    when (it) {
+                                        SearchResultType.Shortcuts -> appShortcutResults.firstOrNull()
+                                        SearchResultType.Calendar -> calendarResults.firstOrNull()
+                                        SearchResultType.Locations -> locationResults.firstOrNull()
+                                        SearchResultType.Contacts -> contactResults.firstOrNull()
+                                        SearchResultType.Articles -> articleResults.firstOrNull()
+                                        SearchResultType.Websites -> websiteResults.firstOrNull()
+                                        SearchResultType.Files -> fileResults.firstOrNull()
+                                        SearchResultType.Calculator,
+                                        SearchResultType.UnitConverter -> null
+                                    }
+                                }
+                                ?: searchActionResults.firstOrNull()
                         } else {
                             bestMatch.value = null
                         }

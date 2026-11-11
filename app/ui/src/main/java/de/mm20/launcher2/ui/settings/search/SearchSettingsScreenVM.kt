@@ -8,6 +8,7 @@ import de.mm20.launcher2.applications.AppRepository
 import de.mm20.launcher2.permissions.PermissionGroup
 import de.mm20.launcher2.permissions.PermissionsManager
 import de.mm20.launcher2.plugins.PluginService
+import de.mm20.launcher2.preferences.SearchResultType
 import de.mm20.launcher2.preferences.search.CalculatorSearchSettings
 import de.mm20.launcher2.preferences.search.CalendarSearchSettings
 import de.mm20.launcher2.preferences.search.ContactSearchSettings
@@ -149,6 +150,13 @@ class SearchSettingsScreenVM : ViewModel(), KoinComponent {
 
     fun setReverseSearchResults(reverseSearchResults: Boolean) {
         searchUiSettings.setReversedResults(reverseSearchResults)
+    }
+
+    val resultOrder = searchUiSettings.resultOrder
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(), null)
+
+    fun setResultOrder(order: List<SearchResultType>) {
+        searchUiSettings.setResultOrder(order)
     }
 
     fun requestAppShortcutsPermission(activity: AppCompatActivity) {
