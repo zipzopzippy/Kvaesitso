@@ -80,9 +80,26 @@ data class LazyDragAndDropGridState(
     }
 
     /**
-     * Move the currently dragged item to the specified drop target if the dragged item is held
-     * for at least 300ms over the drop target. The move operation is canceled if the dragged item
-     * is released or moved out of the dropTarget area during the 300ms time frame.
+     * Personal build: items swap as soon as the dragged item's center passes the target's center
+     * (instead of upstream's 300ms hover). Within a row this is checked horizontally, across rows
+     * vertically, so items of different sizes (e.g. full width spacers) don't swap back and forth.
+     */
+    fun passedCenterOf(target: LazyGridItemInfo, draggedCenter: Offset): Boolean {
+        val dragged = gridState.layoutInfo.visibleItemsInfo.find { it.key == draggedItem?.key }
+            ?: return false
+        val slotCenter = Rect(dragged.offset.toOffset(), dragged.size.toSize()).center
+        val targetCenter = Rect(target.offset.toOffset(), target.size.toSize()).center
+        val (slot, targetPos, pos) = if (target.row == dragged.row) {
+            Triple(slotCenter.x, targetCenter.x, draggedCenter.x)
+        } else {
+            Triple(slotCenter.y, targetCenter.y, draggedCenter.y)
+        }
+        return if (targetPos > slot) pos > targetPos else pos < targetPos
+    }
+
+    /**
+     * Move the currently dragged item to the specified drop target. Called once the dragged item
+     * has passed the center of the drop target (see [passedCenterOf]).
      */
     suspend fun attemptMove(dropTarget: LazyGridItemInfo) {
         if (currentDropPosition != dropTarget.index) {
@@ -90,7 +107,6 @@ data class LazyDragAndDropGridState(
                 dropJob?.cancelAndJoin()
                 dropJob = launch {
                     currentDropPosition = dropTarget.index
-                    delay(300)
                     // Get a fresh copy of layout info because index in saved layout info might be outdated
                     val dragged =
                         gridState.layoutInfo.visibleItemsInfo.find { it.key == draggedItem?.key }
@@ -252,7 +268,9 @@ fun Modifier.dragAndDrop(
                         ).contains(draggedCenter)
                     }
 
-                    if (dragOver != null && dragOver.key != draggedItem.key) {
+                    if (dragOver != null && dragOver.key != draggedItem.key
+                        && state.passedCenterOf(dragOver, draggedCenter)
+                    ) {
                         scope.launch {
                             state.attemptMove(dragOver)
                         }

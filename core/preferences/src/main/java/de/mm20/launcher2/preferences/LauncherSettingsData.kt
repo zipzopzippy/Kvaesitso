@@ -127,6 +127,7 @@ data class LauncherSettingsData internal constructor(
     val searchBarFixed: Boolean = false,
 
     val searchResultsReversed: Boolean = false,
+    val searchResultOrder: List<SearchResultType> = SearchResultType.entries,
     val separateWorkProfile: Boolean = true,
 
     val rankingWeightFactor: WeightFactor = WeightFactor.Default,
@@ -465,6 +466,22 @@ enum class KeyboardFilterBarItem {
     @SerialName("events") Events,
     @SerialName("tools") Tools,
     @SerialName("hidden") HiddenResults,
+}
+
+/**
+ * Search result sections below the apps, in their default order
+ */
+@Serializable
+enum class SearchResultType {
+    @SerialName("shortcuts") Shortcuts,
+    @SerialName("unit_converter") UnitConverter,
+    @SerialName("calculator") Calculator,
+    @SerialName("calendar") Calendar,
+    @SerialName("contacts") Contacts,
+    @SerialName("locations") Locations,
+    @SerialName("articles") Articles,
+    @SerialName("websites") Websites,
+    @SerialName("files") Files,
 }
 
 @Serializable

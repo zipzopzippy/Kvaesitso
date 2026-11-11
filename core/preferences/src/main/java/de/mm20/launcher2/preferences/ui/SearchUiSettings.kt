@@ -1,6 +1,7 @@
 package de.mm20.launcher2.preferences.ui
 
 import de.mm20.launcher2.preferences.LauncherDataStore
+import de.mm20.launcher2.preferences.SearchResultType
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.map
 
@@ -59,6 +60,23 @@ class SearchUiSettings internal constructor(
         launcherDataStore.update {
             it.copy(searchResultsReversed = reversedResults)
         }
+    }
+
+    /**
+     * Order of the search result sections below the apps. Sections missing from the stored
+     * list (e.g. added in a later version) are appended in their default order.
+     */
+    val resultOrder
+        get() = launcherDataStore.data.map { completeOrder(it.searchResultOrder) }.distinctUntilChanged()
+
+    fun setResultOrder(order: List<SearchResultType>) {
+        launcherDataStore.update {
+            it.copy(searchResultOrder = completeOrder(order))
+        }
+    }
+
+    private fun completeOrder(order: List<SearchResultType>): List<SearchResultType> {
+        return order.distinct() + (SearchResultType.entries - order.toSet())
     }
 
     val separateWorkProfile

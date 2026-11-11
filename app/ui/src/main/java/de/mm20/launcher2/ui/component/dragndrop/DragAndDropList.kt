@@ -112,12 +112,12 @@ data class LazyDragAndDropListState(
                 ).contains(draggedCenter)
             }
 
-            if (dragOver != null && dragOver.key != draggedItem.key) {
-                attemptMove(dragOver)
-            }
-
             val toStart =
                 if (listState.layoutInfo.orientation == Orientation.Horizontal) draggedCenter.x else draggedCenter.y
+
+            if (dragOver != null && dragOver.key != draggedItem.key && passedCenterOf(dragOver, toStart)) {
+                attemptMove(dragOver)
+            }
 
 
             if (toStart - listState.layoutInfo.viewportStartOffset < scrollEdgeSize) {
@@ -130,6 +130,19 @@ data class LazyDragAndDropListState(
 
             draggedItemOffset?.let { onDrag(draggedItem, it) }
         }
+    }
+
+    /**
+     * Personal build: items swap as soon as the dragged item's center passes the target's center
+     * (instead of upstream's 300ms hover), which also keeps items of different sizes from
+     * swapping back and forth.
+     */
+    private fun passedCenterOf(target: LazyListItemInfo, draggedCenter: Float): Boolean {
+        val dragged = listState.layoutInfo.visibleItemsInfo.find { it.key == draggedItem?.key }
+            ?: return false
+        val targetCenter = target.offset + target.size / 2f
+        return if (target.index > dragged.index) draggedCenter > targetCenter
+        else draggedCenter < targetCenter
     }
 
     private fun Int.toOffset(): Offset {
@@ -149,9 +162,8 @@ data class LazyDragAndDropListState(
     }
 
     /**
-     * Move the currently dragged item to the specified drop target if the dragged item is held
-     * for at least 300ms over the drop target. The move operation is canceled if the dragged item
-     * is released or moved out of the dropTarget area during the 300ms time frame.
+     * Move the currently dragged item to the specified drop target. Called once the dragged item
+     * has passed the center of the drop target (see [passedCenterOf]).
      */
     private suspend fun attemptMove(dropTarget: LazyListItemInfo) {
         if (currentDropPosition != dropTarget.index) {
@@ -159,7 +171,6 @@ data class LazyDragAndDropListState(
                 dropJob?.cancelAndJoin()
                 dropJob = launch {
                     currentDropPosition = dropTarget.index
-                    delay(300)
                     // Get a fresh copy of layout info because index in saved layout info might be outdated
                     val dragged =
                         listState.layoutInfo.visibleItemsInfo.find { it.key == draggedItem?.key }

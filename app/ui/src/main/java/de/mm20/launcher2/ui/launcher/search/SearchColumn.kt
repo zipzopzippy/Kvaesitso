@@ -39,6 +39,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
+import de.mm20.launcher2.preferences.SearchResultType
 import de.mm20.launcher2.profiles.Profile
 import de.mm20.launcher2.search.AppShortcut
 import de.mm20.launcher2.search.Application
@@ -110,6 +111,7 @@ fun SearchColumn(
     val locations = viewModel.locationResults
     val website = viewModel.websiteResults
     val hiddenResults = viewModel.hiddenResults
+    val resultOrder by viewModel.resultOrder.collectAsState()
 
     val bestMatch by viewModel.bestMatch
 
@@ -280,9 +282,8 @@ fun SearchColumn(
                     )
                 }
 
-                if (!isSearchEmpty) {
-
-                    ShortcutResults(
+                if (!isSearchEmpty) for (resultType in resultOrder) when (resultType) {
+                    SearchResultType.Shortcuts -> ShortcutResults(
                         shortcuts = appShortcuts,
                         missingPermission = missingShortcutsPermission,
                         onPermissionRequest = {
@@ -301,7 +302,7 @@ fun SearchColumn(
                         },
                     )
 
-                    UnitConverterResults(
+                    SearchResultType.UnitConverter -> UnitConverterResults(
                         converters = unitConverter,
                         reverse = reverse,
                         truncate = expandedCategory != SearchCategory.UnitConverter,
@@ -310,12 +311,12 @@ fun SearchColumn(
                         }
                     )
 
-                    CalculatorResults(
+                    SearchResultType.Calculator -> CalculatorResults(
                         calculator,
                         reverse = reverse
                     )
 
-                    CalendarResults(
+                    SearchResultType.Calendar -> CalendarResults(
                         events = events,
                         missingPermission = missingCalendarPermission,
                         onPermissionRequest = {
@@ -334,7 +335,7 @@ fun SearchColumn(
                         }
                     )
 
-                    ContactResults(
+                    SearchResultType.Contacts -> ContactResults(
                         contacts = contacts,
                         missingPermission = missingContactsPermission,
                         onPermissionRequest = {
@@ -353,7 +354,7 @@ fun SearchColumn(
                         },
                     )
 
-                    LocationResults(
+                    SearchResultType.Locations -> LocationResults(
                         locations = locations,
                         missingPermission = missingLocationPermission,
                         onPermissionRequest = {
@@ -371,21 +372,21 @@ fun SearchColumn(
                             viewModel.expandCategory(SearchCategory.Location)
                         }
                     )
-                    ArticleResults(
+                    SearchResultType.Articles -> ArticleResults(
                         articles = wikipedia,
                         selectedIndex = selectedArticleIndex,
                         onSelect = { selectedArticleIndex = it },
                         highlightedItem = bestMatch as? Article,
                         reverse = reverse,
                     )
-                    WebsiteResults(
+                    SearchResultType.Websites -> WebsiteResults(
                         websites = website,
                         selectedIndex = selectedWebsiteIndex,
                         onSelect = { selectedWebsiteIndex = it },
                         highlightedItem = bestMatch as? Website,
                         reverse = reverse,
                     )
-                    FileResults(
+                    SearchResultType.Files -> FileResults(
                         files = files,
                         onPermissionRequest = {
                             viewModel.requestFilesPermission(context as AppCompatActivity)
