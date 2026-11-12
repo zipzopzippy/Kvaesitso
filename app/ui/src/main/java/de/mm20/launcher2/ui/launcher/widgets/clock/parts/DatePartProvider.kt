@@ -178,7 +178,9 @@ class DatePartProvider : PartProvider {
 private const val EventRefreshInterval = 5 * 60_000L
 
 /**
- * Personal build: the next timed event today ("Name · 3:00 pm"), else an all-day event ("Name").
+ * Personal build: the current or next timed event today ("Name · 3:00 pm"), else an all-day
+ * event ("Name"). A timed event stays shown until it ends; when several are on at once, the one
+ * that started most recently is shown.
  */
 @OptIn(ExperimentalCoroutinesApi::class)
 @Composable
@@ -233,7 +235,10 @@ private fun nextEventToday(
         val start = event.startTime
         !event.isTask && start != null && start < dayEnd && event.endTime >= dayStart
     }
-    return today.filter { !it.allDay && it.startTime!! > now }.minByOrNull { it.startTime!! }
+    // Timed events stay shown until they end; of overlapping ones, the one that started last wins.
+    val timed = today.filter { !it.allDay && it.endTime > now }
+    return timed.filter { it.startTime!! <= now }.maxByOrNull { it.startTime!! }
+        ?: timed.minByOrNull { it.startTime!! }
         ?: today.firstOrNull { it.allDay }
 }
 
