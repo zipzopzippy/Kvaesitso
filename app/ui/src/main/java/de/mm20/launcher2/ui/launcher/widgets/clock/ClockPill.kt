@@ -51,7 +51,7 @@ internal fun ClockPill(
     }
     Box(
         modifier = modifier
-            .clip(RoundedCornerShape(24.dp))
+            .clip(RoundedCornerShape(ClockPillDefaults.CornerRadius))
             .background(colors.first)
             .padding(contentPadding),
         contentAlignment = Alignment.Center,
@@ -70,4 +70,10 @@ internal object ClockPillDefaults {
     val HorizontalPadding = 12.dp
     val VerticalPadding = 4.dp
     val ContentPadding = PaddingValues(horizontal = HorizontalPadding, vertical = VerticalPadding)
+
+    /**
+     * Half the height of a one-line pill (20sp line + 2 × 4dp padding at the default font size),
+     * so taller pills (the date with today's event) become rounded rectangles instead of pills.
+     */
+    val CornerRadius = 14.dp
 }
