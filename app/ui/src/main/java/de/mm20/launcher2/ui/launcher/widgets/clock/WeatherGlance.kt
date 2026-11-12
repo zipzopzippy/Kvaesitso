@@ -44,8 +44,9 @@ import kotlin.math.roundToInt
  * Personal build addition (see MODIFICATIONS.md): a weather line below the clock, using the summary
  * of the active weather provider. Hidden if the provider doesn't offer one.
  *
- * During the day it shows the current weather, then today and tonight. At night it shows the
- * current weather, then tonight and the next day. The labels use the lighter of the two clock part
+ * During the day it shows the current weather ("Now"), then today and tonight. At night it shows
+ * the current weather, then tonight and the next day. Night starts when the hourly forecast for the
+ * current hour is marked as night (Breezy: not daylight). The labels use the lighter of the two clock part
  * text styles, the temperatures the heavier one.
  *
  * A raindrop with the total adds up the next 12 hours, if any is expected, shown as "<1 mm" below
@@ -230,7 +231,7 @@ private fun glanceFor(summary: WeatherSummary, hours: List<Forecast>, now: Long)
         )
     }
     return Glance(
-        periods = listOfNotNull(current.asPeriod(isNight)) + forecast.filterNotNull(),
+        periods = listOfNotNull(current.asPeriod(isNight, R.string.date_now)) + forecast.filterNotNull(),
         precipitation = upcomingPrecipitation(hours, now),
     )
 }

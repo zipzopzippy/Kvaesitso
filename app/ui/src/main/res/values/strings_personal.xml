@@ -16,6 +16,7 @@
     <string name="preference_clock_widget_text_shadow_summary" translatable="false">Shadow behind the clock digits</string>
     <string name="preference_clock_widget_weather" translatable="false">Weather</string>
     <string name="preference_clock_widget_weather_summary" translatable="false">Show the current, day and night temperatures below the clock</string>
+    <string name="date_now" translatable="false">Now</string>
     <string name="date_tonight" translatable="false">Tonight</string>
     <string name="preference_clock_widget_weather_precipitation" translatable="false">Rain and snow</string>
     <string name="preference_clock_widget_weather_precipitation_summary" translatable="false">Show the total expected over the next 12 hours</string>
